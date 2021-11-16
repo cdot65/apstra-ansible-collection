@@ -1,0 +1,135 @@
+---
+houston_template:
+  asn_allocation_policy:
+    spine_asn_scheme: distinct
+  dhcp_service_intent:
+    active: true
+  display_name: houston_template
+  external_routing_policy:
+    export_policy:
+      all_routes: true
+      l2edge_subnets: true
+      l3edge_server_links: true
+      loopbacks: true
+      spine_leaf_links: true
+    import_policy: default_only
+  fabric_addressing_policy:
+    spine_leaf_links: ipv4
+  rack_type_counts:
+    - count: 4
+      rack_type_id: houston_rack
+  rack_types:
+    - access_switches: []
+      description: ""
+      display_name: houston_rack
+      id: houston_rack
+      leafs:
+        - external_router_facing: false
+          external_router_links: []
+          label: houston_leaf
+          leaf_leaf_l3_link_count: 0
+          leaf_leaf_l3_link_port_channel_id: 0
+          leaf_leaf_l3_link_speed: null
+          leaf_leaf_link_count: 0
+          leaf_leaf_link_port_channel_id: 0
+          leaf_leaf_link_speed: null
+          link_per_spine_count: 1
+          link_per_spine_speed:
+            unit: G
+            value: 10
+          logical_device: "{{ logical_device_vqfx_leaf['data']['id'] }}"
+          redundancy_protocol: null
+      logical_devices:
+        - display_name: vqfx_leaf
+          id: "{{ logical_device_vqfx_leaf['data']['id'] }}"
+          panels:
+            - panel_layout:
+                column_count: 12
+                row_count: 1
+              port_groups:
+                - count: 4
+                  roles:
+                    - spine
+                  speed:
+                    unit: G
+                    value: 10
+                - count: 7
+                  roles:
+                    - l2_server
+                    - access
+                    - l3_server
+                  speed:
+                    unit: G
+                    value: 10
+                - count: 1
+                  roles:
+                    - external_router
+                  speed:
+                    unit: G
+                    value: 10
+              port_indexing:
+                order: T-B, L-R
+                schema: absolute
+                start_index: 1
+        - display_name: AOS-1x10-1
+          id: AOS-1x10-1
+          panels:
+            - panel_layout:
+                column_count: 1
+                row_count: 1
+              port_groups:
+                - count: 1
+                  roles:
+                    - leaf
+                    - access
+                  speed:
+                    unit: G
+                    value: 10
+              port_indexing:
+                order: T-B, L-R
+                schema: absolute
+                start_index: 1
+      servers:
+        - connectivity_type: l2
+          count: 1
+          ip_version: ipv4
+          label: houston_server
+          links:
+            - attachment_type: singleAttached
+              label: houston_leaf_server
+              lag_mode: null
+              link_per_switch_count: 1
+              link_speed:
+                unit: G
+                value: 10
+              target_switch_label: houston_leaf
+          logical_device: AOS-1x10-1
+          port_channel_id_max: 0
+          port_channel_id_min: 0
+  spine:
+    count: 2
+    external_link_count: 0
+    external_link_speed: null
+    link_per_superspine_count: 0
+    link_per_superspine_speed: null
+    logical_device:
+      display_name: vqfx_spine
+      id: "{{ logical_device_vqfx_spine['data']['id'] }}"
+      panels:
+        - panel_layout:
+            column_count: 12
+            row_count: 1
+          port_groups:
+            - count: 12
+              roles:
+                - leaf
+              speed:
+                unit: G
+                value: 10
+          port_indexing:
+            order: T-B, L-R
+            schema: absolute
+            start_index: 1
+  type: rack_based
+  virtual_network_policy:
+    overlay_control_protocol: evpn

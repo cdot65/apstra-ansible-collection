@@ -1,0 +1,474 @@
+---
+### #################################################################
+### # CREATE EVERYTHING
+### #################################################################
+- hosts: localhost
+  gather_facts: False
+  become: False
+  tasks:
+    ### #################################################################
+    ### # AUTHENTICATE AND RECEIVE AN API TOKEN FROM THE APSTRA SERVER
+    ### #################################################################
+    - name: retrieve an API token for our session
+      ansible.builtin.uri:
+        url: https://apstra.dmz.home/api/user/login
+        method: POST
+        headers:
+          Content-Type: application/json
+        status_code: 201
+        validate_certs: False
+        body_format: json
+        body:
+          username: apstra
+          password: apstra123
+      register: api_token
+
+    - name: create 'api_token' object by setting it equal to value in response
+      ansible.builtin.set_fact:
+        api_token: "{{ api_token.json.token }}"      
+
+    ### #################################################################
+    ### # CREATE IP POOL RESOURCES
+    ### #################################################################
+    - name: "### CREATE LEAF LOOPBACK IP POOL"
+      cremsburg.apstra.resources:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        display_name: "houston_leaf_loopbacks"
+        type: "ip-pools"
+        tags:
+          - houston
+          - leaf
+        subnets:
+          - "10.255.2.0/24"
+        
+        # define to delete or create
+        state: present
+
+    - name: "### CREATE SPINE LOOPBACK IP POOL"
+      cremsburg.apstra.resources:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        display_name: "houston_spine_loopbacks"
+        type: "ip-pools"
+        tags:
+          - houston
+          - spine
+        subnets:
+          - "10.255.1.0/24"
+
+        # define to delete or create
+        state: present
+
+    - name: "### CREATE DC FABRIC IP POOL"
+      cremsburg.apstra.resources:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        display_name: "houston_fabric_underlay"
+        type: "ip-pools"
+        tags:
+          - houston
+          - fabric
+        subnets:
+          - "172.20.1.0/24"
+
+        # define to delete or create
+        state: present
+
+    ### #################################################################
+    ### # CREATE ASN POOL RESOURCES
+    ### #################################################################
+    - name: "### CREATE ASN POOL WITH TWO RANGES"
+      cremsburg.apstra.resources:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        type: "asn-pools"
+        display_name: "houston_asn_pool"
+        tags:
+          - houston
+        ranges:
+          - first: 65010
+            last: 65019
+          - first: 65110
+            last: 65119
+
+        # define to delete or create
+        state: present
+
+    ### #################################################################
+    ### # CREATE VNI POOL RESOURCES
+    ### #################################################################
+    - name: "### CREATE VNI POOL WITH TWO RANGES"
+      cremsburg.apstra.resources:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        type: "vni-pools"
+        display_name: "houston_vni_pool"
+        tags:
+          - houston
+        ranges:
+          - first: 10000
+            last: 19999
+          - first: 100000
+            last: 109999
+
+        # define to delete or create
+        state: present
+
+    ### #################################################################
+    ### # CREATE VLAN POOL RESOURCES
+    ### #################################################################
+    - name: "### CREATE VLAN POOL WITH TWO RANGES"
+      cremsburg.apstra.resources:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        display_name: "houston_vlan_pool"
+        type: "vlan-pools"
+        tags:
+          - houston
+        ranges:
+          - first: 100
+            last: 199
+          - first: 1000
+            last: 1999
+
+        # define to delete or create
+        state: present
+
+    ### #################################################################
+    ### # CREATE EXTERNAL ROUTER RESOURCE
+    ### #################################################################
+    - name: "### CREATE DUAL STACK EXTERNAL ROUTER RESOURCE"
+      cremsburg.apstra.resources:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        display_name: "houston_external_router"
+        address: "192.168.10.255"
+        ipv6_address: "fc01:a05:192:168:10::255"
+        asn: 65000
+        type: "external-routers"
+
+        # define to delete or create
+        state: present
+
+### #################################################################
+### # CREATE DESIGN PLAY
+### #################################################################
+- hosts: localhost
+  gather_facts: False
+  become: False
+  tasks:
+    ### #################################################################
+    ### # AUTHENTICATE AND RECEIVE AN API TOKEN FROM THE APSTRA SERVER
+    ### #################################################################
+    - name: retrieve an API token for our session
+      ansible.builtin.uri:
+        url: https://apstra.dmz.home/api/user/login
+        method: POST
+        headers:
+          Content-Type: application/json
+        status_code: 201
+        validate_certs: False
+        body_format: json
+        body:
+          username: apstra
+          password: apstra123
+      register: api_token
+
+    - name: create 'api_token' object by setting it equal to value in response
+      ansible.builtin.set_fact:
+        api_token: "{{ api_token.json.token }}"      
+
+    ### #################################################################
+    ### # CREATE NEW LOGICAL DEVICES FOR SPINE AND LEAF
+    ### #################################################################
+    - name: "### CREATE LOGICAL DEVICE vqfx_spine"
+      cremsburg.apstra.design:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        type: "logical-devices"
+        display_name: "vqfx_spine"
+        panels:
+          - panel_layout:
+              row_count: 1
+              column_count: 12
+            port_indexing:
+              order: "T-B, L-R"
+              schema: "absolute"
+              start_index: 1
+            port_groups:
+
+              # ports xe-0/0/0-11, connections to leafs
+              - count: 12
+                roles:
+                  - leaf
+                speed:
+                  value: 10
+                  unit: "G"
+
+        # define to delete or create
+        state: present
+      register: logical_device_vqfx_spine
+
+    - name: "### CREATE LOGICAL DEVICE vqfx_leaf"
+      cremsburg.apstra.design:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        type: "logical-devices"
+        display_name: "vqfx_leaf"
+        panels:
+          - panel_layout:
+              row_count: 1
+              column_count: 12
+            port_indexing:
+              order: "T-B, L-R"
+              schema: "absolute"
+              start_index: 1
+            port_groups:
+              # ports xe-0/0/0-3, connections to spine
+              - count: 4
+                roles:
+                  - spine
+                speed:
+                  value: 10
+                  unit: "G"
+              # ports xe-0/0/4-10, connections to servers
+              - count: 7
+                roles:
+                  - l2_server
+                  - l3_server
+                  - access
+                speed:
+                  value: 10
+                  unit: "G"
+              # port xe-0/0/11, connections to external router
+              - count: 1
+                roles:
+                  - external_router
+                speed:
+                  value: 10
+                  unit: "G"
+
+        # define to delete or create
+        state: present
+      register: logical_device_vqfx_leaf
+
+    ### #################################################################
+    ### # CREATE A NEW INTERFACE MAPPING
+    ### #################################################################
+    - name: "### CREATE INTERFACE MAPPING vqfx_spine"
+      cremsburg.apstra.design:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        type: "interface-maps"
+        label: "houston_spine_interface_mapping"
+        logical_device_id: "{{ logical_device_vqfx_spine['data']['id'] }}"
+        device_profile_id: "Juniper_vQFX"
+        interfaces: "{{ interface_map_vqfx_spine }}"
+
+        # define to delete or create
+        state: present
+      
+    - name: "### CREATE INTERFACE MAPPING vqfx_leaf"
+      cremsburg.apstra.design:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        type: "interface-maps"
+        label: "houston_leaf_interface_mapping"
+        logical_device_id: "{{ logical_device_vqfx_leaf['data']['id'] }}"
+        device_profile_id: "Juniper_vQFX"
+        interfaces: "{{ interface_map_vqfx_leaf }}"
+
+        # define to delete or create
+        state: present
+      
+    ### #################################################################
+    ### # CREATE A NEW RACK TYPE
+    ### #################################################################
+    - name: "### CREATE RACK TYPE houston_rack"
+      cremsburg.apstra.design:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        type: "rack-types"
+        label: "houston_rack"
+        access_switches: []
+        description: houston_rack
+        display_name: houston_rack
+        id: houston_rack
+        leafs:
+          - link_per_spine_count: 1
+            redundancy_protocol:
+            leaf_leaf_link_speed:
+            external_router_links: []
+            leaf_leaf_l3_link_count: 0
+            leaf_leaf_l3_link_speed:
+            link_per_spine_speed:
+              unit: G
+              value: 10
+            external_router_facing: false
+            label: houston_leaf
+            leaf_leaf_l3_link_port_channel_id: 0
+            leaf_leaf_link_port_channel_id: 0
+            logical_device: "{{ logical_device_vqfx_leaf['data']['id'] }}"
+            leaf_leaf_link_count: 0
+        logical_devices:
+          - display_name: AOS-1x10-1
+            id: AOS-1x10-1
+            panels:
+              - panel_layout:
+                  row_count: 1
+                  column_count: 1
+                port_indexing:
+                  order: T-B, L-R
+                  start_index: 1
+                  schema: absolute
+                port_groups:
+                  - count: 1
+                    speed:
+                      unit: G
+                      value: 10
+                    roles:
+                      - leaf
+                      - access    
+          - display_name: vqfx_leaf
+            id: "{{ logical_device_vqfx_leaf['data']['id'] }}"
+            panels:
+              - panel_layout:
+                  row_count: 1
+                  column_count: 12
+                port_indexing:
+                  order: T-B, L-R
+                  start_index: 1
+                  schema: absolute
+                port_groups:
+                  - count: 4
+                    speed:
+                      unit: G
+                      value: 10
+                    roles:
+                      - spine
+                  - count: 7
+                    speed:
+                      unit: G
+                      value: 10
+                    roles:
+                      - l2_server
+                      - access
+                      - l3_server
+                  - count: 1
+                    speed:
+                      unit: G
+                      value: 10
+                    roles:
+                      - external_router    
+        servers:
+          - count: 1
+            ip_version: ipv4
+            port_channel_id_min: 0
+            port_channel_id_max: 0
+            connectivity_type: l2
+            links:
+              - link_per_switch_count: 1
+                link_speed:
+                  unit: G
+                  value: 10
+                target_switch_label: houston_leaf
+                lag_mode:
+                leaf_peer:
+                attachment_type: singleAttached
+                label: houston_leaf_server
+            label: houston_server
+            logical_device: AOS-1x10-1
+
+        # define to delete or create
+        state: present
+
+    ### #################################################################
+    ### # CREATE A TEMPLATE
+    ### #################################################################
+    - name: "### CREATE TEMPLATE houston_template"
+      cremsburg.apstra.design:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        type: "templates"
+        design_template: "{{ houston_template }}"
+
+        # define to delete or create
+        state: present
+      register: templates
+
+    # - name: debug templates to screen
+    #   debug:
+    #     msg: "{{ templates }}"
+
+    ### #################################################################
+    ### # CREATE A BLUEPRINT
+    ### #################################################################
+    - name: "### CREATE BLUEPRINT cicd_template"
+      cremsburg.apstra.blueprint:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        design: "two_stage_l3clos"
+        init_type: "template_reference"
+        template_id: "{{ templates['data']['id'] }}"
+        label: "cicd_template"
+
+        # define to delete or create
+        state: present
+      register: blueprint

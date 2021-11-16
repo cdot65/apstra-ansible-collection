@@ -1,0 +1,98 @@
+==========================
+cremsburg.apstra.blueprint
+==========================
+
+----------------------
+Manage your Blueprints
+----------------------
+
+design
+======
+
+This module will allow you to manage your Blueprint within Apstra.
+
+Feature set as of version 0.0.15:
+  - manage Blueprints
+  - idempotent
+
+Under construction
+
+Example
+-------
+
+Here is a basic example of using the module to mange your resources in Apstra
+
+.. code-block:: yaml
+
+    ### #################################################################
+    ### # CREATE A BLUEPRINT
+    ### #################################################################
+    - name: "### CREATE BLUEPRINT cicd_template"
+      cremsburg.apstra.blueprint:
+
+        # define apstra server parameters
+        server: "apstra.dmz.home"
+        api_token: "{{ api_token }}"
+
+        # define request
+        design: "two_stage_l3clos"
+        init_type: "template_reference"
+        template_id: "{{ templates['data']['id'] }}"
+        label: "cicd_template"
+
+        # define to delete or create
+        state: present
+      register: blueprint
+
+
+Data Model
+----------
+
+If you'd like to see the options available for you within the module, have a look at the data model provided below. 
+
+.. code-block:: python
+
+    @staticmethod
+    def blueprint_spec():
+        return dict(
+            api_token=dict(
+                required=True,
+                fallback=(env_fallback, ['APSTRA_API_TOKEN', 'APSTRA_API_TOKEN', 'API_TOKEN']),
+                no_log=True,
+                type='str'
+            ),
+            design=dict(
+                required=False,
+                type='str'
+            ),
+            init_type=dict(
+                required=False,
+                type='str'
+            ),
+            label=dict(
+                required=True,
+                type='str'
+            ),
+            template_id=dict(
+                required=False,
+                type='str'
+            ),
+            port=dict(
+                required=False,
+                type='int'
+            ),
+            server=dict(
+                required=False,
+                type='str'
+            ),
+            state=dict(
+                required=True,
+                choices=['absent', 'present'],
+                type='str'
+            ),
+            validate_certs=dict(
+                type='bool',
+                required=False,
+                default=False
+            ),
+        )

@@ -1,0 +1,16 @@
+stages:
+  - build
+  - install
+
+build_image:
+  stage: build
+  image: "registry.gitlab.com/cremsburg/ansible-collection-builder"
+  script:
+    - "cd cremsburg/apstra"
+    - "ansible-galaxy collection build --force"
+
+install_collection:
+  stage: install
+  image: "registry.gitlab.com/cremsburg/ansible-collection-builder"
+  script:
+    - "ansible-galaxy collection install cremsburg.apstra"
