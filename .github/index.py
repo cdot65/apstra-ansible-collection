@@ -21,103 +21,48 @@
 
 import os
 import sys
-import requests
 from jinja2 import Environment, FileSystemLoader
 
-GH_API_ENDPOINT = "https://api.github.com/users/cdot65/repos?per_page=150"
-JSON_FIELDS = {
-    "name": "project_name",
-    "description": "description",
-    "html_url": "homepage",
-    "updated_at": "last_commit",
-    "topics": "topics",
-}
+# import requests
+
+
 TEMPLATE_MARKDOWN = "index.md.j2"
 OUTPUT_FILE = "../docs/index.md"
-PAGE_TITLE = "Juniper Automation Examples"
+PAGE_TITLE = "Juniper Apstra Ansible Collection"
+PROJECT_NAME = "apstra-ansible-collection"
 ORGANISATION_NAME = "cdot65"
 ORGANISATION_URL = "https://github.com/" + ORGANISATION_NAME
-TOPIC = "juniper"
 
 
-def get_gh_api(url):
-    """
-    get_gh_api Extract information using GET
+# def filter_by_topic(projects):
+#     """
+#     filter_by_topic enable a filteration system by topic
 
-    Collect Github data from their public API
-    Current version does not support authentication
+#     Parameters
+#     ----------
+#     projects : list
+#         list of repositories from Github
+#     """
+#     data = list()
 
-    Parameters
-    ----------
-    url : string
-        Github API string to get.
-
-    Returns
-    -------
-    json
-        Response from GH.
-    """
-    response = requests.get(url)
-    if response.status_code == requests.codes.ok:
-        return response.json()
-    return {}
-
-
-def extract_fields(gh_json, fields):
-    """
-    extract_fields Extract field from GH API data
-
-    Extract fields from GH API data and standardize name of keys
-
-    Parameters
-    ----------
-    gh_json : json
-        JSON content from Github
-    fields : dict
-        A list of fields to extract and the name we want to use as standard.
-    """
-    data = list()
-    for entry in gh_json:
-        cell = dict()
-        for field in fields:
-            cell[fields[field]] = entry[field]
-        data.append(cell)
-    return data
-
-
-def filter_by_topic(projects):
-    """
-    filter_by_topic enable a filteration system by topic
-
-    Parameters
-    ----------
-    projects : list
-        list of repositories from Github
-    """
-    data = list()
-
-    for each in projects:
-        if TOPIC in each["topics"]:
-            data.append(each)
-    return data
+#     for each in projects:
+#         if TOPIC in each["topics"]:
+#             data.append(each)
+#     return data
 
 
 if __name__ == "__main__":
-    data = get_gh_api(url=GH_API_ENDPOINT)
-    projects = extract_fields(gh_json=data, fields=JSON_FIELDS)
     root = os.path.dirname(os.path.abspath(__file__))
     env = Environment(loader=FileSystemLoader(root))
     env.trim_blocks = True
     env.lstrip_blocks = True
     env.rstrip_blocks = True
     template = env.get_template(TEMPLATE_MARKDOWN)
-    projects_filtered = filter_by_topic(projects)
     output = template.render(
-        projects=projects_filtered,
         organisation_name=ORGANISATION_NAME,
         organisation_url=ORGANISATION_URL,
+        project_name=PROJECT_NAME,
         page_title=PAGE_TITLE,
-        topic=TOPIC,
     )
     filename = os.path.join(root, OUTPUT_FILE)
     with open(filename, "w") as fh:
