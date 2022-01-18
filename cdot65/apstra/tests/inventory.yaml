@@ -1,5 +1,0 @@
-all:
-  children:
-    apstra_servers:
-      hosts:
-        apstra.dmz.home:

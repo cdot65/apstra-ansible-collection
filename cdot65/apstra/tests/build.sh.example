@@ -1,0 +1,19 @@
+#!/bin/sh
+
+# ############################################################################
+# # Several steps acheived within this script
+# #   - Builds our Ansible collection
+# #   - Installs our collection
+# #   - Executes our Ansible Playbooks in a serial fashion
+# ############################################################################
+#
+# Copyright 2021, Calvin Remsburg
+# https://twitter.com/_calvinr
+#
+# Licensed under the MIT license:
+# https://opensource.org/licenses/MIT
+
+ansible-galaxy collection build --force
+ansible-galaxy collection install ./cdot65-apstra-0.0.1.tar.gz -p /etc/ansible/collections
+cd tests/
+ansible-playbook tests.yaml -e apstra_server=apstra.dmz.home -e apstra_user=admin -e apstra_password=password -vvv
