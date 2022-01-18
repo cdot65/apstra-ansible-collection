@@ -7,11 +7,3 @@
 First off, hello and welcome to the landing page for the `cdot65.apstra` Ansible Collection. My name is Calvin and I work in a sales capacity at Juniper Networks; I am hope that you find this collection helpful.
 
 *This page is generated automatically*
-
-## List of projects
-
-|  Project  |  Description  | Last activity |
-|------------------|---------------|-------------|
-{% for project in projects|sort(reverse=false,attribute='project_name') %}
-|  [{{project['project_name']}}]({{project['homepage']}}) | {% if project['description'] != 'None'  %} {{project['description']}} {% else %} N/A {% endif %} | {{project['last_commit']|truncate(10,end='')}}
-{% endfor %}
