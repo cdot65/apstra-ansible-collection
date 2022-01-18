@@ -34,7 +34,7 @@ JSON_FIELDS = {
 }
 TEMPLATE_MARKDOWN = "index.md.j2"
 OUTPUT_FILE = "../docs/index.md"
-PAGE_TITLE = "Juniper Automation Examples"
+PAGE_TITLE = "Juniper Apstra Ansible Collection"
 ORGANISATION_NAME = "cdot65"
 ORGANISATION_URL = "https://github.com/" + ORGANISATION_NAME
 TOPIC = "juniper"
