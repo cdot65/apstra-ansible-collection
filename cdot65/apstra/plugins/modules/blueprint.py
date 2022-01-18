@@ -1,11 +1,12 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2020, Calvin Remsburg (@cremsburg) <cremsburg@protonmail.com>
+# Copyright: (c) 2020, Calvin Remsburg (@cdot65) <cremsburg.dev@gmail.com.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-DOCUMENTATION = r'''
+DOCUMENTATION = r"""
 ---
 module: design
 
@@ -65,13 +66,13 @@ options:
         type: bool
 
 extends_documentation_fragment:
-    - cremsburg.apstra.blueprint
+    - cdot65.apstra.blueprint
 
 author:
-    - Calvin Remsburg (@cremsburg)
-'''
+    - Calvin Remsburg (@cdot65)
+"""
 
-EXAMPLES = r'''
+EXAMPLES = r"""
 ---
 ### #################################################################
 ### # CREATE RESOURCES PLAY
@@ -105,7 +106,7 @@ EXAMPLES = r'''
     ### # CREATE BLUEPRINT
     ### #################################################################
     - name: "### CREATE IP POOL cicd_leaf_loopbacks"
-      cremsburg.apstra.blueprint:
+      cdot65.apstra.blueprint:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -114,12 +115,14 @@ EXAMPLES = r'''
         # define request
         blueprint: "cicd_leaf_loopbacks"
 
-'''
+"""
 
 
 from traceback import format_exc
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.cremsburg.apstra.plugins.module_utils.apstra.api import ApstraHelper
+from ansible_collections.cdot65.apstra.plugins.module_utils.apstra.api import (
+    ApstraHelper,
+)
 from ansible.module_utils._text import to_native
 
 
@@ -132,25 +135,27 @@ def build_blueprint(resources, module, rest):
     #   and store it's site ID
     # ########################################################################
     design_element = dict()
-    design_element['id'] = None
-    design_element['label'] = None
-    design_element['provisioned'] = False
+    design_element["id"] = None
+    design_element["label"] = None
+    design_element["provisioned"] = False
     for each in resources["items"]:
-        if each['label'] == module.params['label']:
-            design_element['id'] = each['id']
-            design_element['label'] = each['label']
-            design_element['provisioned'] = True
+        if each["label"] == module.params["label"]:
+            design_element["id"] = each["id"]
+            design_element["label"] = each["label"]
+            design_element["provisioned"] = True
     # #######################################################################
     # if the user set the state to 'absent', then we need to either delete
     #   an existing site, or report back to the user that the site didn't
     #   exist.
     # #######################################################################
-    if module.params['state'] == "absent":
-        if design_element['provisioned'] is True:
+    if module.params["state"] == "absent":
+        if design_element["provisioned"] is True:
             response = rest.delete(f"blueprints/{design_element['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
-            module.exit_json(changed=False, data="Interface Mapping does not exist, exiting")
+            module.exit_json(
+                changed=False, data="Interface Mapping does not exist, exiting"
+            )
 
     # #######################################################################
     # looking to either create or update a interface mapping
@@ -160,15 +165,17 @@ def build_blueprint(resources, module, rest):
         # #######################################################################
         # create the interface mapping if it doesn't already exist
         # #######################################################################
-        if design_element['provisioned'] is False:
+        if design_element["provisioned"] is False:
 
             # ###########################################################################
             # design_element_data: parameters entered by the user to create the resource
             # ###########################################################################
-            design_element_data = dict(design=module.params['design'],
-                                       init_type=module.params['init_type'],
-                                       template_id=module.params['template_id'],
-                                       label=module.params['label'])
+            design_element_data = dict(
+                design=module.params["design"],
+                init_type=module.params["init_type"],
+                template_id=module.params["template_id"],
+                label=module.params["label"],
+            )
 
             response = rest.post(f"blueprints", data=design_element_data)
 
@@ -193,14 +200,18 @@ def core(module):
     # #######################################################################
     response = rest.get(f"blueprints")
     if response.status_code != 200:
-        module.fail_json(msg=f"Failed to receive a response from the API, here is the response information to help you debug : {response.info}")
+        module.fail_json(
+            msg=f"Failed to receive a response from the API, here is the response information to help you debug : {response.info}"
+        )
 
     resources = response.json
 
     if isinstance(resources, dict):
         pass
     else:
-        module.fail_json(msg=f"The response returned is not in a dictionary format, contant support")
+        module.fail_json(
+            msg=f"The response returned is not in a dictionary format, contant support"
+        )
 
     build_blueprint(resources, module, rest)
 
@@ -226,5 +237,5 @@ def main():
         module.fail_json(msg=to_native(e), exception=format_exc())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

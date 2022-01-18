@@ -1,4 +1,4 @@
-# Ansible Collection - cremsburg.apstra
+# Ansible Collection - cdot65.apstra
 
 [![N|Solid](https://raw.githubusercontent.com/cdot65/svg-locker-shhhhh/master/apstra_0.3x.png)](https://juniper.net/)
 
@@ -16,9 +16,9 @@ Here is a short list of modules included within the collection, expect feature p
 
 Name | Description
 ---- | -----------
-[cremsburg.apstra.blueprint](https://github.com/cdot65/apstra-ansible-collection/blob/master/cremsburg/apstra/docs/cremsburg.apstra.blueprint.rst)|Manage Blueprints
-[cremsburg.apstra.design](https://github.com/cdot65/apstra-ansible-collection/blob/master/cremsburg/apstra/docs/cremsburg.apstra.design.rst)|Manage the Design elements
-[cremsburg.apstra.resources](https://github.com/cdot65/apstra-ansible-collection/blob/master/cremsburg/apstra/docs/cremsburg.apstra.resources.rst)|Manage the Resources elements
+[cdot65.apstra.blueprint](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.blueprint.rst)|Manage Blueprints
+[cdot65.apstra.design](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.design.rst)|Manage the Design elements
+[cdot65.apstra.resources](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.resources.rst)|Manage the Resources elements
 
 ## 🚀 Executing the playbook
 
@@ -34,7 +34,7 @@ After installing the collections, you can call the modules by using their full n
   tasks:
     
     - name: Manage an IP Pool Resource with two prefixes
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
         # define server connectivity options
         server: apstra.dmz.home
         api_token: "{{ api_token }}"

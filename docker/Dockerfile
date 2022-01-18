@@ -3,12 +3,12 @@ FROM python:slim-buster
 ### -------------------------------------------------
 ### Metadata information
 ### -------------------------------------------------
-LABEL name="ansible-collection-builder"
-LABEL maintainer="cremsburg@protonmail.com"
+LABEL name="apstra-ansible-collection"
+LABEL maintainer="cremsburg.dev@gmail.com"
 LABEL description="ansible container to help build collections"
 LABEL license="GPLv3"
-LABEL url="https://gitlab.com/cremsburg/ansible-collection-builder"
-LABEL build-date="20210402"
+LABEL url="https://github.com/cdot65/apstra-ansible-collection"
+LABEL build-date="20220118"
 
 ### -------------------------------------------------
 ### Change directory to /tmp/files

@@ -11,7 +11,7 @@
     ### #################################################################
     - name: retrieve an API token for our session
       ansible.builtin.uri:
-        url: https://apstra.dmz.home/api/user/login
+        url: "https://{{ apstra_server }}/api/user/login"
         method: POST
         headers:
           Content-Type: application/json
@@ -19,8 +19,8 @@
         validate_certs: False
         body_format: json
         body:
-          username: ansible
-          password: "nMaNh_3qC_avzgu"
+          username: "{{ apstra_user }}"
+          password: "{{ apstra_password }}"
       register: api_token
 
     - name: create 'api_token' object by setting it equal to value in response
@@ -31,10 +31,10 @@
     ### # CREATE IP POOL RESOURCES
     ### #################################################################
     - name: "### CREATE IP POOL cicd_leaf_loopbacks"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -50,10 +50,10 @@
         state: present
 
     - name: "### CREATE IP POOL cicd_spine_loopbacks"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -69,10 +69,10 @@
         state: present
 
     - name: "### CREATE IP POOL cicd_fabric_underlay"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -91,10 +91,10 @@
     ### # CREATE ASN POOL RESOURCES
     ### #################################################################
     - name: "### CREATE ASN POOL cicd_asn_pool"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -115,10 +115,10 @@
     ### # CREATE VNI POOL RESOURCES
     ### #################################################################
     - name: "### CREATE VNI POOL cicd_vni_pool"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -147,7 +147,7 @@
     ### #################################################################
     - name: retrieve an API token for our session
       ansible.builtin.uri:
-        url: https://apstra.dmz.home/api/user/login
+        url: "https://{{ apstra_server }}/api/user/login"
         method: POST
         headers:
           Content-Type: application/json
@@ -155,8 +155,8 @@
         validate_certs: False
         body_format: json
         body:
-          username: "ansible"
-          password: "nMaNh_3qC_avzgu"
+          username: "{{ apstra_user }}"
+          password: "{{ apstra_password }}"
       register: api_token
 
     - name: create 'api_token' object by setting it equal to value in response
@@ -167,10 +167,10 @@
     ### # CREATE NEW LOGICAL DEVICES FOR SPINE AND LEAF
     ### #################################################################
     - name: "### CREATE LOGICAL DEVICE cicd_spine"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -199,10 +199,10 @@
       register: logical_device_cicd_spine
 
     - name: "### CREATE LOGICAL DEVICE cicd_leaf"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -251,10 +251,10 @@
     ### # CREATE A NEW INTERFACE MAPPING
     ### #################################################################
     - name: "### CREATE INTERFACE MAPPING cicd_spine"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -268,10 +268,10 @@
         state: present
 
     - name: "### CREATE INTERFACE MAPPING cicd_leaf"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -288,10 +288,10 @@
     ### # CREATE A NEW RACK TYPE
     ### #################################################################
     - name: "### CREATE RACK TYPE cicd_rack"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -393,10 +393,10 @@
     ### # CREATE A TEMPLATE
     ### #################################################################
     - name: "### CREATE TEMPLATE cicd_template"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -415,10 +415,10 @@
     ### # CREATE A BLUEPRINT
     ### #################################################################
     - name: "### CREATE BLUEPRINT cicd_template"
-      cremsburg.apstra.blueprint:
+      cdot65.apstra.blueprint:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -443,7 +443,7 @@
     ### #################################################################
     - name: retrieve an API token for our session
       ansible.builtin.uri:
-        url: https://apstra.dmz.home/api/user/login
+        url: "https://{{ apstra_server }}/api/user/login"
         method: POST
         headers:
           Content-Type: application/json
@@ -451,8 +451,8 @@
         validate_certs: False
         body_format: json
         body:
-          username: "ansible"
-          password: "nMaNh_3qC_avzgu"
+          username: "{{ apstra_user }}"
+          password: "{{ apstra_password }}"
       register: api_token
 
     - name: create 'api_token' object by setting it equal to value in response
@@ -463,10 +463,10 @@
     ### # DELETE A BLUEPRINT
     ### #################################################################
     - name: "### DELETE BLUEPRINT cicd_template"
-      cremsburg.apstra.blueprint:
+      cdot65.apstra.blueprint:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -485,10 +485,10 @@
     ### # DELETE A TEMPLATE
     ### #################################################################
     - name: "### DELETE TEMPLATE cicd_template"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -508,10 +508,10 @@
     ### # DELETE RACK TYPE
     ### #################################################################
     - name: "### DELETE RACK TYPE cicd_rack"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -534,10 +534,10 @@
     ### # DELETE A NEW INTERFACE MAPPING
     ### #################################################################
     - name: "### DELETE INTERFACE MAPPING cicd_spine"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -554,10 +554,10 @@
     #     msg: "{{ delete_interface_mapping_cicd_spine }}"
 
     - name: "### DELETE INTERFACE MAPPING cicd_leaf"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -577,10 +577,10 @@
     ### # DELETE NEW LOGICAL DEVICES FOR SPINE AND LEAF
     ### #################################################################
     - name: "### DELETE LOGICAL DEVICE cicd_spine"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -597,10 +597,10 @@
     #     msg: "{{ delete_logical_device_cicd_spine }}"
 
     - name: "### DELETE LOGICAL DEVICE cicd_leaf"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -620,10 +620,10 @@
     ### # DELETE VNI POOL RESOURCES
     ### #################################################################
     - name: "### DELETE VNI POOL cicd_vni_pool"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -643,10 +643,10 @@
     ### # DELETE ASN POOL RESOURCES
     ### #################################################################
     - name: "### DELETE ASN POOL cicd_asn_pool"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -666,10 +666,10 @@
     ### # DELETE IP POOL RESOURCES
     ### #################################################################
     - name: "### DELETE IP POOL cicd_leaf_loopbacks"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -686,10 +686,10 @@
     #     msg: "{{ delete_ip_pool_cicd_leaf_loopbacks }}"
 
     - name: "### DELETE IP POOL cicd_spine_loopbacks"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
@@ -706,10 +706,10 @@
     #     msg: "{{ delete_ip_pool_cicd_spine_loopbacks }}"
 
     - name: "### DELETE IP POOL cicd_fabric_underlay"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
-        server: "apstra.dmz.home"
+        server: "{{ apstra_server }}"
         api_token: "{{ api_token }}"
 
         # define request
