@@ -18,20 +18,14 @@ from invoke import task
 ### ---------------------------------------------------------------------------
 ### DOCKER PARAMETERS
 ### ---------------------------------------------------------------------------
-DOCKER_IMG = "registry.gitlab.com/cremsburg/ansible-collection-builder"
-DOCKER_TAG = "apstra.0.1"
+DOCKER_IMG = "ghcr.io/cdot65/apstra-ansible-collection"
+DOCKER_TAG = "0.0.1"
 
 ### ---------------------------------------------------------------------------
 ### ANSIBLE GALAXY PARAMETERS
 ### ---------------------------------------------------------------------------
 GALAXY_KEY = os.getenv("GALAXY_KEY", "")
-COLLECTION_PACKAGE = "cremsburg-apstra-0.1.0.tar.gz"
-
-### ---------------------------------------------------------------------------
-### CICD PARAMETERS
-### ---------------------------------------------------------------------------
-CICD_USERNAME = "ansible"
-CICD_PASSWORD = "nMaNh_3qC_avzgu"
+COLLECTION_PACKAGE = f"cdot65-apstra-{DOCKER_TAG}.tar.gz"
 
 ### ---------------------------------------------------------------------------
 ### SYSTEM PARAMETERS
@@ -48,6 +42,7 @@ def build(context):
         f"docker build -t {DOCKER_IMG}:{DOCKER_TAG} docker/",
     )
 
+
 ### ---------------------------------------------------------------------------
 ### COLLECTIONS BUILD
 ### ---------------------------------------------------------------------------
@@ -59,12 +54,13 @@ def collection(context):
         f"docker run \
             -it \
             --rm \
-            -v {PWD}/cremsburg/apstra:/home/apstra \
+            -v {PWD}/cdot65/apstra:/home/apstra \
             -w /home/apstra/ \
             {DOCKER_IMG}:{DOCKER_TAG} \
             ansible-galaxy collection build --force",
         pty=True,
     )
+
 
 ### ---------------------------------------------------------------------------
 ### COLLECTIONS PUBLISH
@@ -77,7 +73,7 @@ def publish(context):
         f"docker run \
             -it \
             --rm \
-            -v {PWD}/cremsburg/apstra:/home/apstra \
+            -v {PWD}/cdot65/apstra:/home/apstra \
             -w /home/apstra/ \
             {DOCKER_IMG}:{DOCKER_TAG} \
             ansible-galaxy collection publish ./{COLLECTION_PACKAGE} --api-key={GALAXY_KEY}",
@@ -94,7 +90,7 @@ def shell(context):
     print("Jump into a container")
     context.run(
         f"docker run -it --rm \
-            -v {PWD}/cremsburg/apstra:/home/apstra \
+            -v {PWD}/cdot65/apstra:/home/apstra \
             -w /home/apstra/ \
             {DOCKER_IMG}:{DOCKER_TAG} /bin/bash",
         pty=True,
@@ -110,7 +106,7 @@ def test(context):
     print("Test the build process")
     context.run(
         f"docker run -it --rm \
-            -v {PWD}/cremsburg/apstra:/home/apstra \
+            -v {PWD}/cdot65/apstra:/home/apstra \
             -w /home/apstra/ \
             {DOCKER_IMG}:{DOCKER_TAG} sh tests/build.sh",
         pty=True,

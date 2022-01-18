@@ -135,5 +135,5 @@ cython_debug/
 # # Calvin Funtime
 # #####################################
 .env
-cremsburg/apstra/*tar.gz
+cdot65/apstra/*tar.gz
 *.sh

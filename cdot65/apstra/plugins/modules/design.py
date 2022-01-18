@@ -1,11 +1,12 @@
 #!/usr/bin/python
 
-# Copyright: (c) 2020, Calvin Remsburg (@cremsburg) <cremsburg@protonmail.com>
+# Copyright: (c) 2020, Calvin Remsburg (@cdot65) <cremsburg.dev@gmail.com.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
-DOCUMENTATION = r'''
+DOCUMENTATION = r"""
 ---
 module: design
 
@@ -89,13 +90,13 @@ options:
         type: bool
 
 extends_documentation_fragment:
-    - cremsburg.apstra.design
+    - cdot65.apstra.design
 
 author:
-    - Calvin Remsburg (@cremsburg)
-'''
+    - Calvin Remsburg (@cdot65)
+"""
 
-EXAMPLES = r'''
+EXAMPLES = r"""
 ---
 ### #################################################################
 ### # CREATE RESOURCES PLAY
@@ -129,7 +130,7 @@ EXAMPLES = r'''
     ### # CREATE IP POOL RESOURCES
     ### #################################################################
     - name: "### CREATE IP POOL cicd_leaf_loopbacks"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -148,7 +149,7 @@ EXAMPLES = r'''
         state: present
 
     - name: "### CREATE IP POOL cicd_spine_loopbacks"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -167,7 +168,7 @@ EXAMPLES = r'''
         state: present
 
     - name: "### CREATE IP POOL cicd_fabric_underlay"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -189,7 +190,7 @@ EXAMPLES = r'''
     ### # CREATE ASN POOL RESOURCES
     ### #################################################################
     - name: "### CREATE ASN POOL cicd_asn_pool"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -213,7 +214,7 @@ EXAMPLES = r'''
     ### # CREATE VNI POOL RESOURCES
     ### #################################################################
     - name: "### CREATE VNI POOL cicd_vni_pool"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -237,7 +238,7 @@ EXAMPLES = r'''
     ### # CREATE VLAN POOL RESOURCES
     ### #################################################################
     - name: "### CREATE VLAN POOL cicd_vlan_pool"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -261,7 +262,7 @@ EXAMPLES = r'''
     ### # CREATE EXTERNAL ROUTER RESOURCE
     ### #################################################################
     - name: "### CREATE EXTERNAL ROUTER cicd_external_router"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -309,7 +310,7 @@ EXAMPLES = r'''
     ### # CREATE NEW LOGICAL DEVICES FOR SPINE AND LEAF
     ### #################################################################
     - name: "### CREATE LOGICAL DEVICE cicd_spine"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -341,7 +342,7 @@ EXAMPLES = r'''
       register: logical_device_cicd_spine
 
     - name: "### CREATE LOGICAL DEVICE cicd_leaf"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -391,7 +392,7 @@ EXAMPLES = r'''
     ### # CREATE A NEW INTERFACE MAPPING
     ### #################################################################
     - name: "### CREATE INTERFACE MAPPING cicd_spine"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -408,7 +409,7 @@ EXAMPLES = r'''
         state: present
 
     - name: "### CREATE INTERFACE MAPPING cicd_leaf"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -428,7 +429,7 @@ EXAMPLES = r'''
     ### # CREATE A NEW RACK TYPE
     ### #################################################################
     - name: "### CREATE RACK TYPE cicd_rack"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -533,7 +534,7 @@ EXAMPLES = r'''
     ### # CREATE A TEMPLATE
     ### #################################################################
     - name: "### CREATE TEMPLATE cicd_template"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -551,12 +552,14 @@ EXAMPLES = r'''
     #   debug:
     #     msg: "{{ templates }}"
 
-'''
+"""
 
 
 from traceback import format_exc
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.cremsburg.apstra.plugins.module_utils.apstra.api import ApstraHelper
+from ansible_collections.cdot65.apstra.plugins.module_utils.apstra.api import (
+    ApstraHelper,
+)
 from ansible.module_utils._text import to_native
 
 
@@ -569,19 +572,19 @@ def rack_types(resources, module, rest):
     #   and store it's site ID
     # ########################################################################
     design_element = dict()
-    design_element['id'] = None
-    design_element['provisioned'] = False
+    design_element["id"] = None
+    design_element["provisioned"] = False
     for each in resources["items"]:
-        if each['id'] == module.params['id']:
-            design_element['id'] = each['id']
-            design_element['provisioned'] = True
+        if each["id"] == module.params["id"]:
+            design_element["id"] = each["id"]
+            design_element["provisioned"] = True
     # #######################################################################
     # if the user set the state to 'absent', then we need to either delete
     #   an existing site, or report back to the user that the site didn't
     #   exist.
     # #######################################################################
-    if module.params['state'] == "absent":
-        if design_element['provisioned'] is True:
+    if module.params["state"] == "absent":
+        if design_element["provisioned"] is True:
             response = rest.delete(f"design/rack-types/{design_element['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
@@ -595,18 +598,20 @@ def rack_types(resources, module, rest):
         # #######################################################################
         # create the Rack Type if it doesn't already exist
         # #######################################################################
-        if design_element['provisioned'] is False:
+        if design_element["provisioned"] is False:
 
             # ###########################################################################
             # design_element_data: parameters entered by the user to create the resource
             # ###########################################################################
-            design_element_data = dict(access_switches=module.params['access_switches'],
-                                       description=module.params['description'],
-                                       display_name=module.params['display_name'],
-                                       id=module.params['id'],
-                                       leafs=module.params['leafs'],
-                                       logical_devices=module.params['logical_devices'],
-                                       servers=module.params['servers'])
+            design_element_data = dict(
+                access_switches=module.params["access_switches"],
+                description=module.params["description"],
+                display_name=module.params["display_name"],
+                id=module.params["id"],
+                leafs=module.params["leafs"],
+                logical_devices=module.params["logical_devices"],
+                servers=module.params["servers"],
+            )
 
             response = rest.post(f"design/rack-types", data=design_element_data)
 
@@ -624,25 +629,27 @@ def interface_maps(resources, module, rest):
     #   and store it's site ID
     # ########################################################################
     design_element = dict()
-    design_element['id'] = None
-    design_element['label'] = None
-    design_element['provisioned'] = False
+    design_element["id"] = None
+    design_element["label"] = None
+    design_element["provisioned"] = False
     for each in resources["items"]:
-        if each['label'] == module.params['label']:
-            design_element['id'] = each['id']
-            design_element['label'] = each['label']
-            design_element['provisioned'] = True
+        if each["label"] == module.params["label"]:
+            design_element["id"] = each["id"]
+            design_element["label"] = each["label"]
+            design_element["provisioned"] = True
     # #######################################################################
     # if the user set the state to 'absent', then we need to either delete
     #   an existing site, or report back to the user that the site didn't
     #   exist.
     # #######################################################################
-    if module.params['state'] == "absent":
-        if design_element['provisioned'] is True:
+    if module.params["state"] == "absent":
+        if design_element["provisioned"] is True:
             response = rest.delete(f"design/interface-maps/{design_element['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
-            module.exit_json(changed=False, data="Interface Mapping does not exist, exiting")
+            module.exit_json(
+                changed=False, data="Interface Mapping does not exist, exiting"
+            )
 
     # #######################################################################
     # looking to either create or update a interface mapping
@@ -652,15 +659,17 @@ def interface_maps(resources, module, rest):
         # #######################################################################
         # create the interface mapping if it doesn't already exist
         # #######################################################################
-        if design_element['provisioned'] is False:
+        if design_element["provisioned"] is False:
 
             # ###########################################################################
             # design_element_data: parameters entered by the user to create the resource
             # ###########################################################################
-            design_element_data = dict(device_profile_id=module.params['device_profile_id'],
-                                       logical_device_id=module.params['logical_device_id'],
-                                       interfaces=module.params['interfaces'],
-                                       label=module.params['label'])
+            design_element_data = dict(
+                device_profile_id=module.params["device_profile_id"],
+                logical_device_id=module.params["logical_device_id"],
+                interfaces=module.params["interfaces"],
+                label=module.params["label"],
+            )
 
             response = rest.post(f"design/interface-maps", data=design_element_data)
 
@@ -678,25 +687,27 @@ def logical_device(resources, module, rest):
     #   and store it's site ID
     # ########################################################################
     design_element = dict()
-    design_element['display_name'] = None
-    design_element['id'] = None
-    design_element['provisioned'] = False
+    design_element["display_name"] = None
+    design_element["id"] = None
+    design_element["provisioned"] = False
     for each in resources["items"]:
-        if each['display_name'] == module.params['display_name']:
-            design_element['display_name'] = each['display_name']
-            design_element['id'] = each['id']
-            design_element['provisioned'] = True
+        if each["display_name"] == module.params["display_name"]:
+            design_element["display_name"] = each["display_name"]
+            design_element["id"] = each["id"]
+            design_element["provisioned"] = True
     # #######################################################################
     # if the user set the state to 'absent', then we need to either delete
     #   an existing site, or report back to the user that the site didn't
     #   exist.
     # #######################################################################
-    if module.params['state'] == "absent":
-        if design_element['provisioned'] is True:
+    if module.params["state"] == "absent":
+        if design_element["provisioned"] is True:
             response = rest.delete(f"design/logical-devices/{design_element['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
-            module.exit_json(changed=False, data="Logical Device does not exist, exiting")
+            module.exit_json(
+                changed=False, data="Logical Device does not exist, exiting"
+            )
 
     # #######################################################################
     # looking to either create or update a logical device
@@ -706,16 +717,18 @@ def logical_device(resources, module, rest):
         # #######################################################################
         # create the logical device if it doesn't already exist
         # #######################################################################
-        if design_element['provisioned'] is False:
+        if design_element["provisioned"] is False:
 
             # ###########################################################################
             # design_element_data: parameters entered by the user to create the resource
             # ###########################################################################
-            design_element_data = dict(display_name=module.params['display_name'],
-                                       panels=module.params['panels'])
+            design_element_data = dict(
+                display_name=module.params["display_name"],
+                panels=module.params["panels"],
+            )
 
             response = rest.post(f"design/logical-devices", data=design_element_data)
-            design_element_data['id'] = response.json['id']
+            design_element_data["id"] = response.json["id"]
 
             module.exit_json(changed=True, data=response.json)
 
@@ -731,22 +744,22 @@ def templates(resources, module, rest):
     #   and store it's site ID
     # ########################################################################
     design_element = dict()
-    design_element['display_name'] = None
-    design_element['id'] = None
-    design_element['provisioned'] = False
+    design_element["display_name"] = None
+    design_element["id"] = None
+    design_element["provisioned"] = False
     for each in resources["items"]:
-        if each['display_name'] == module.params['design_template']['display_name']:
-            design_element['display_name'] = each['display_name']
-            design_element['id'] = each['id']
-            design_element['provisioned'] = True
+        if each["display_name"] == module.params["design_template"]["display_name"]:
+            design_element["display_name"] = each["display_name"]
+            design_element["id"] = each["id"]
+            design_element["provisioned"] = True
 
     # #######################################################################
     # if the user set the state to 'absent', then we need to either delete
     #   an existing site, or report back to the user that the site didn't
     #   exist.
     # #######################################################################
-    if module.params['state'] == "absent":
-        if design_element['provisioned'] is True:
+    if module.params["state"] == "absent":
+        if design_element["provisioned"] is True:
             response = rest.delete(f"design/templates/{design_element['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
@@ -760,22 +773,32 @@ def templates(resources, module, rest):
         # #######################################################################
         # create the logical device if it doesn't already exist
         # #######################################################################
-        if design_element['provisioned'] is False:
+        if design_element["provisioned"] is False:
 
             # ###########################################################################
             # design_element_data: parameters entered by the user to create the resource
             # ###########################################################################
             design_element_data = dict(
-                                        asn_allocation_policy=module.params['design_template']['asn_allocation_policy'],
-                                        dhcp_service_intent=module.params['design_template']['dhcp_service_intent'],
-                                        display_name=module.params['design_template']['display_name'],
-                                        external_routing_policy=module.params['design_template']['external_routing_policy'],
-                                        fabric_addressing_policy=module.params['design_template']['fabric_addressing_policy'],
-                                        rack_type_counts=module.params['design_template']['rack_type_counts'],
-                                        rack_types=module.params['design_template']['rack_types'],
-                                        spine=module.params['design_template']['spine'],
-                                        type=module.params['design_template']['type'],
-                                        virtual_network_policy=module.params['design_template']['virtual_network_policy']
+                asn_allocation_policy=module.params["design_template"][
+                    "asn_allocation_policy"
+                ],
+                dhcp_service_intent=module.params["design_template"][
+                    "dhcp_service_intent"
+                ],
+                display_name=module.params["design_template"]["display_name"],
+                external_routing_policy=module.params["design_template"][
+                    "external_routing_policy"
+                ],
+                fabric_addressing_policy=module.params["design_template"][
+                    "fabric_addressing_policy"
+                ],
+                rack_type_counts=module.params["design_template"]["rack_type_counts"],
+                rack_types=module.params["design_template"]["rack_types"],
+                spine=module.params["design_template"]["spine"],
+                type=module.params["design_template"]["type"],
+                virtual_network_policy=module.params["design_template"][
+                    "virtual_network_policy"
+                ],
             )
 
             response = rest.post(f"design/templates", data=design_element_data)
@@ -802,22 +825,26 @@ def core(module):
     # #######################################################################
     response = rest.get(f"design/{module.params['type']}")
     if response.status_code != 200:
-        module.fail_json(msg=f"Failed to receive a response from the API, here is the response information to help you debug : {response.info}")
+        module.fail_json(
+            msg=f"Failed to receive a response from the API, here is the response information to help you debug : {response.info}"
+        )
 
     resources = response.json
 
     if isinstance(resources, dict):
         pass
     else:
-        module.fail_json(msg=f"The response returned is not in a dictionary format, contant support")
+        module.fail_json(
+            msg=f"The response returned is not in a dictionary format, contant support"
+        )
 
-    if module.params['type'] == 'logical-devices':
+    if module.params["type"] == "logical-devices":
         logical_device(resources, module, rest)
-    elif module.params['type'] == 'interface-maps':
+    elif module.params["type"] == "interface-maps":
         interface_maps(resources, module, rest)
-    elif module.params['type'] == 'rack-types':
+    elif module.params["type"] == "rack-types":
         rack_types(resources, module, rest)
-    elif module.params['type'] == 'templates':
+    elif module.params["type"] == "templates":
         templates(resources, module, rest)
 
     module.exit_json(changed=False, data=resources)
@@ -842,5 +869,5 @@ def main():
         module.fail_json(msg=to_native(e), exception=format_exc())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

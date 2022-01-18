@@ -1,5 +1,5 @@
 ==========================
-cremsburg.apstra.resources
+cdot65.apstra.resources
 ==========================
 
 ---------------------
@@ -71,7 +71,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # CREATE IP POOL RESOURCES ON APSTRA SERVER
         ### #################################################################
         - name: Create an IP Pool Resource with two prefixes
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -99,7 +99,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # CREATE IPv6 POOL RESOURCES ON APSTRA SERVER
         ### #################################################################
         - name: Create an IPv6 Pool Resource with two prefixes
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -127,7 +127,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # CREATE ASN POOL RESOURCES ON APSTRA SERVER
         ### #################################################################
         - name: Create an ASN Pool Resource with two ranges
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -157,7 +157,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # CREATE VNI POOL RESOURCES ON APSTRA SERVER
         ### #################################################################
         - name: Create an VNI Pool Resource with two ranges
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -187,7 +187,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # CREATE VLAN POOL RESOURCES ON APSTRA SERVER
         ### #################################################################
         - name: Create an VLAN Pool Resource with two ranges
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -217,7 +217,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # CREATE EXTERNAL ROUTER RESOURCE ON APSTRA SERVER
         ### #################################################################
         - name: Create an External Router Resource
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -272,7 +272,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # DELETE IP POOL RESOURCES ON APSTRA SERVER
         ### #################################################################
         - name: Delete an IP Pool Resource with two prefixes
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -296,7 +296,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # DELETE IPv6 POOL RESOURCES ON APSTRA SERVER
         ### #################################################################
         - name: Delete an IP Pool Resource with two prefixes
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -320,7 +320,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # DELETE ASN POOL RESOURCES ON APSTRA SERVER
         ### #################################################################
         - name: Delete an ASN Pool Resource with two ranges
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -344,7 +344,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # DELETE VNI POOL RESOURCES ON APSTRA SERVER
         ### #################################################################
         - name: Delete an VNI Pool Resource with two ranges
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -368,7 +368,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # DELETE VNI POOL RESOURCES ON APSTRA SERVER
         ### #################################################################
         - name: Delete an VLAN Pool Resource with two ranges
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443
@@ -392,7 +392,7 @@ Here is a basic example of using the module to mange your resources in Apstra
         ### # DELETE EXTERNAL ROUTER RESOURCE ON APSTRA SERVER
         ### #################################################################
         - name: Delete an External Router Resource
-          cremsburg.apstra.resources:
+          cdot65.apstra.resources:
             # define server connectivity options
             server: apstra.dmz.home
             port: 443

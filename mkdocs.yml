@@ -1,6 +1,6 @@
-site_name: Juniper Automation Examples
+site_name: Ansible Collection for Juniper Apstra
 site_author: cdot65
-site_description: A collection of DevOps examples for Juniper Networks platforms
+site_description: Ansible Collection for Juniper Apstra
 docs_dir: docs/
 theme:
   name: material
@@ -14,24 +14,15 @@ theme:
 extra_css:
   - stylesheets/juniper.css
 copyright: Copyright &copy; 2022 cdot65
-repo_name: 'Juniper Automation Examples'
-repo_url: https://github.com/cdot65/juniper-netdevops-examples
+repo_name: 'apstra-ansible-collection'
+repo_url: https://github.com/cdot65/apstra-ansible-collection
 use_directory_urls: true
 nav:
   - Homepage: index.md
-  - Ansible:
-    - Ansible Core: ansible.md
-    - Ansible AWX: awx.md
-  - Python:
-    - Nornir: nornir.md
-    - PyEZ: python.md
-    - Scrapli: scrapli.md
-  - Network Technology:
-    - 128T SD-WAN: 128t.md
-    - Apstra: apstra.md
-    - Data Center: datacenter.md
-    - Mist: mist.md
-    - Network Security: netsec.md
+  - Modules:
+    - blueprint: index.md
+    - design: index.md
+    - resources: index.md
 
 markdown_extensions:
   - smarty

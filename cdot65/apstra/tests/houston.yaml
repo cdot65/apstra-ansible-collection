@@ -31,7 +31,7 @@
     ### # CREATE IP POOL RESOURCES
     ### #################################################################
     - name: "### CREATE LEAF LOOPBACK IP POOL"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -50,7 +50,7 @@
         state: present
 
     - name: "### CREATE SPINE LOOPBACK IP POOL"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -69,7 +69,7 @@
         state: present
 
     - name: "### CREATE DC FABRIC IP POOL"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -91,7 +91,7 @@
     ### # CREATE ASN POOL RESOURCES
     ### #################################################################
     - name: "### CREATE ASN POOL WITH TWO RANGES"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -115,7 +115,7 @@
     ### # CREATE VNI POOL RESOURCES
     ### #################################################################
     - name: "### CREATE VNI POOL WITH TWO RANGES"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -139,7 +139,7 @@
     ### # CREATE VLAN POOL RESOURCES
     ### #################################################################
     - name: "### CREATE VLAN POOL WITH TWO RANGES"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -163,7 +163,7 @@
     ### # CREATE EXTERNAL ROUTER RESOURCE
     ### #################################################################
     - name: "### CREATE DUAL STACK EXTERNAL ROUTER RESOURCE"
-      cremsburg.apstra.resources:
+      cdot65.apstra.resources:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -211,7 +211,7 @@
     ### # CREATE NEW LOGICAL DEVICES FOR SPINE AND LEAF
     ### #################################################################
     - name: "### CREATE LOGICAL DEVICE vqfx_spine"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -243,7 +243,7 @@
       register: logical_device_vqfx_spine
 
     - name: "### CREATE LOGICAL DEVICE vqfx_leaf"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -293,7 +293,7 @@
     ### # CREATE A NEW INTERFACE MAPPING
     ### #################################################################
     - name: "### CREATE INTERFACE MAPPING vqfx_spine"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -310,7 +310,7 @@
         state: present
       
     - name: "### CREATE INTERFACE MAPPING vqfx_leaf"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -330,7 +330,7 @@
     ### # CREATE A NEW RACK TYPE
     ### #################################################################
     - name: "### CREATE RACK TYPE houston_rack"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -435,7 +435,7 @@
     ### # CREATE A TEMPLATE
     ### #################################################################
     - name: "### CREATE TEMPLATE houston_template"
-      cremsburg.apstra.design:
+      cdot65.apstra.design:
 
         # define apstra server parameters
         server: "apstra.dmz.home"
@@ -457,7 +457,7 @@
     ### # CREATE A BLUEPRINT
     ### #################################################################
     - name: "### CREATE BLUEPRINT cicd_template"
-      cremsburg.apstra.blueprint:
+      cdot65.apstra.blueprint:
 
         # define apstra server parameters
         server: "apstra.dmz.home"

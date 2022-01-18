@@ -1,5 +1,5 @@
 ==========================
-cremsburg.apstra.blueprint
+cdot65.apstra.blueprint
 ==========================
 
 ----------------------
@@ -28,7 +28,7 @@ Here is a basic example of using the module to mange your resources in Apstra
     ### # CREATE A BLUEPRINT
     ### #################################################################
     - name: "### CREATE BLUEPRINT cicd_template"
-      cremsburg.apstra.blueprint:
+      cdot65.apstra.blueprint:
 
         # define apstra server parameters
         server: "apstra.dmz.home"

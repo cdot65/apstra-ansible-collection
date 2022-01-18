@@ -2,7 +2,7 @@
 name = "apstra-ansible-collection"
 version = "0.1.0"
 description = "Ansible collection builder"
-authors = ["Calvin Remsburg <cremsburg@protonmail.com>"]
+authors = ["Calvin Remsburg <cremsburg.dev@gmail.com.com>"]
 license = "Apache 2.0"
 
 [tool.poetry.dependencies]
