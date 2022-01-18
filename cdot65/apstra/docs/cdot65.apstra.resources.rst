@@ -22,7 +22,6 @@ Suported Resources:
 Resource Type     How to specify within Ansible module parameter "type"
 ================  ============================================================
 ASN Pool          :type: asn-pools
-External Routers  :type: external-routers
 IPv4 Pool         :type: ip-pools
 IPv6 Pool         :type: ipv6-pools
 VLAN Pool         :type: vlan-pools
