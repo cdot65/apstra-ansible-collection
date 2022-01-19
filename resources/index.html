@@ -497,35 +497,35 @@
 <span class="c1">### # CREATE RESOURCES PLAY</span><span class="w"></span>
 <span class="c1">### #################################################################</span><span class="w"></span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">gather_facts</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">become</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">tasks</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+<span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### # AUTHENTICATE AND RECEIVE AN API TOKEN FROM THE APSTRA SERVER</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retrieve an API token for our session</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">ansible.builtin.uri</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ansible.builtin.uri</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://apstra.dmz.home/api/user/login</span><span class="w"></span>
 <span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POST</span><span class="w"></span>
 <span class="w">        </span><span class="nt">headers</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/json</span><span class="w"></span>
+<span class="w">          </span><span class="nt">Content-Type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application/json</span><span class="w"></span>
 <span class="w">        </span><span class="nt">status_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">201</span><span class="w"></span>
 <span class="w">        </span><span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
 <span class="w">        </span><span class="nt">body_format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span><span class="w"></span>
 <span class="w">        </span><span class="nt">body</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra</span><span class="w"></span>
-<span class="w">            </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra123</span><span class="w"></span>
+<span class="w">          </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra</span><span class="w"></span>
+<span class="w">          </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra123</span><span class="w"></span>
 <span class="w">        </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api_token</span><span class="w"></span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create &#39;api_token&#39; object by setting it equal to value in response</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">ansible.builtin.set_fact</span><span class="p p-Indicator">:</span><span class="w"></span>
-<span class="w">        </span><span class="nt">api_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example123&quot;</span><span class="w">      </span>
+<span class="w">      </span><span class="nt">ansible.builtin.set_fact</span><span class="p">:</span><span class="w"></span>
+<span class="w">        </span><span class="nt">api_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example123&quot;</span><span class="w"></span>
 
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### # CREATE IP POOL RESOURCES ON APSTRA SERVER</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create an IP Pool Resource with two prefixes</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">cdot65.apstra.resources</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">cdot65.apstra.resources</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="c1"># define server connectivity options</span><span class="w"></span>
 <span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra.dmz.home</span><span class="w"></span>
 <span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span><span class="w"></span>
@@ -537,8 +537,8 @@
 <span class="w">        </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w"></span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ip-pools&quot;</span><span class="w"></span>
 <span class="w">        </span><span class="nt">subnets</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;100.1.1.0/24&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;100.1.2.0/24&quot;</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;100.1.1.0/24&quot;</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;100.1.2.0/24&quot;</span><span class="w"></span>
 
 <span class="w">        </span><span class="c1"># state whether you want to create or delete this resource</span><span class="w"></span>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
@@ -550,7 +550,7 @@
 <span class="w">    </span><span class="c1">### # CREATE IPv6 POOL RESOURCES ON APSTRA SERVER</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create an IPv6 Pool Resource with two prefixes</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">cdot65.apstra.resources</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">cdot65.apstra.resources</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="c1"># define server connectivity options</span><span class="w"></span>
 <span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra.dmz.home</span><span class="w"></span>
 <span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span><span class="w"></span>
@@ -562,8 +562,8 @@
 <span class="w">        </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w"></span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;ipv6-pools&quot;</span><span class="w"></span>
 <span class="w">        </span><span class="nt">subnets</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;2001:db8::192:168:10:251/112&quot;</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;2001:db8::192:168:20:251/112&quot;</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;2001:db8::192:168:10:251/112&quot;</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;2001:db8::192:168:20:251/112&quot;</span><span class="w"></span>
 
 <span class="w">        </span><span class="c1"># state whether you want to create or delete this resource</span><span class="w"></span>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
@@ -575,7 +575,7 @@
 <span class="w">    </span><span class="c1">### # CREATE ASN POOL RESOURCES ON APSTRA SERVER</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create an ASN Pool Resource with two ranges</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">cdot65.apstra.resources</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">cdot65.apstra.resources</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="c1"># define server connectivity options</span><span class="w"></span>
 <span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra.dmz.home</span><span class="w"></span>
 <span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span><span class="w"></span>
@@ -587,9 +587,9 @@
 <span class="w">        </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w"></span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;asn-pools&quot;</span><span class="w"></span>
 <span class="w">        </span><span class="nt">ranges</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">first</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65300</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">first</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65300</span><span class="w"></span>
 <span class="w">            </span><span class="nt">last</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65399</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">first</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65500</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">first</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65500</span><span class="w"></span>
 <span class="w">            </span><span class="nt">last</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65599</span><span class="w"></span>
 
 <span class="w">        </span><span class="c1"># state whether you want to create or delete this resource</span><span class="w"></span>
@@ -602,7 +602,7 @@
 <span class="w">    </span><span class="c1">### # CREATE VNI POOL RESOURCES ON APSTRA SERVER</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create an VNI Pool Resource with two ranges</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">cdot65.apstra.resources</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">cdot65.apstra.resources</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="c1"># define server connectivity options</span><span class="w"></span>
 <span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra.dmz.home</span><span class="w"></span>
 <span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span><span class="w"></span>
@@ -614,9 +614,9 @@
 <span class="w">        </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w"></span>
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vni-pools&quot;</span><span class="w"></span>
 <span class="w">        </span><span class="nt">ranges</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">first</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65300</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">first</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65300</span><span class="w"></span>
 <span class="w">            </span><span class="nt">last</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65399</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">first</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65500</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">first</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65500</span><span class="w"></span>
 <span class="w">            </span><span class="nt">last</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">65599</span><span class="w"></span>
 
 <span class="w">        </span><span class="c1"># state whether you want to create or delete this resource</span><span class="w"></span>

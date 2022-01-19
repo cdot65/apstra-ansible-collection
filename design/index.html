@@ -496,14 +496,14 @@
 <span class="c1">### # CREATE DESIGN PLAY</span><span class="w"></span>
 <span class="c1">### #################################################################</span><span class="w"></span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">gather_facts</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">become</span><span class="p p-Indicator">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
-<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">tasks</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+<span class="w">  </span><span class="nt">become</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">False</span><span class="w"></span>
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### # AUTHENTICATE AND RECEIVE AN API TOKEN FROM THE APSTRA SERVER</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">retrieve an API token for our session</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">ansible.builtin.uri</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ansible.builtin.uri</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://apstra.dmz.home/api/user/login</span><span class="w"></span>
 <span class="w">        </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">POST</span><span class="w"></span>
 <span class="w">        </span><span class="nt">headers</span><span class="p">:</span><span class="w"></span>
@@ -514,17 +514,17 @@
 <span class="w">        </span><span class="nt">body</span><span class="p">:</span><span class="w"></span>
 <span class="w">            </span><span class="nt">username</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra</span><span class="w"></span>
 <span class="w">            </span><span class="nt">password</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra123</span><span class="w"></span>
-<span class="w">        </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api_token</span><span class="w"></span>
+<span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">api_token</span><span class="w"></span>
 
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">create &#39;api_token&#39; object by setting it equal to value in response</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">ansible.builtin.set_fact</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">ansible.builtin.set_fact</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="nt">api_token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;example123&quot;</span><span class="w">      </span>
 
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### # CREATE A NEW LOGICAL DEVICE ON APSTRA SERVER</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create a logical device</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">cdot65.apstra.design</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">cdot65.apstra.design</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="c1"># define server connectivity options</span><span class="w"></span>
 <span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra.dmz.home</span><span class="w"></span>
 <span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span><span class="w"></span>
@@ -535,20 +535,20 @@
 <span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;logical-devices&quot;</span><span class="w"></span>
 <span class="w">        </span><span class="nt">display_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cicd_test&quot;</span><span class="w"></span>
 <span class="w">        </span><span class="nt">panels</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">panel_layout</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="nt">row_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
-<span class="w">                </span><span class="nt">column_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">panel_layout</span><span class="p">:</span><span class="w"></span>
+<span class="w">              </span><span class="nt">row_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">              </span><span class="nt">column_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span><span class="w"></span>
 <span class="w">            </span><span class="nt">port_indexing</span><span class="p">:</span><span class="w"></span>
 <span class="w">                </span><span class="nt">order</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;T-B,</span><span class="nv"> </span><span class="s">L-R&quot;</span><span class="w"></span>
 <span class="w">                </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;absolute&quot;</span><span class="w"></span>
 <span class="w">                </span><span class="nt">start_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">            </span><span class="nt">port_groups</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span><span class="w"></span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span><span class="w"></span>
 <span class="w">                </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">leaf</span><span class="w"></span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">leaf</span><span class="w"></span>
 <span class="w">                </span><span class="nt">speed</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
-<span class="w">                    </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;G&quot;</span><span class="w"></span>
+<span class="w">                  </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
+<span class="w">                  </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;G&quot;</span><span class="w"></span>
 
 <span class="w">        </span><span class="c1"># state whether you want to create or delete this resource</span><span class="w"></span>
 <span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">present</span><span class="w"></span>
@@ -560,7 +560,7 @@
 <span class="w">    </span><span class="c1">### # CREATE A NEW INTERFACE MAPPING ON APSTRA SERVER</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create an interface mapping</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">cdot65.apstra.design</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">cdot65.apstra.design</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="c1"># define server connectivity options</span><span class="w"></span>
 <span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra.dmz.home</span><span class="w"></span>
 <span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span><span class="w"></span>
@@ -573,7 +573,7 @@
 <span class="w">        </span><span class="nt">logical_device_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cicd_test&quot;</span><span class="w"></span>
 <span class="w">        </span><span class="nt">device_profile_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Juniper_vQFX&quot;</span><span class="w"></span>
 <span class="w">        </span><span class="nt">interfaces</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;xe-0/0/0&quot;</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;xe-0/0/0&quot;</span><span class="w"></span>
 <span class="w">            </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
 <span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">leaf</span><span class="w"></span>
 <span class="w">            </span><span class="nt">mapping</span><span class="p">:</span><span class="w"> </span>
@@ -590,7 +590,7 @@
 <span class="w">                </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;G&quot;</span><span class="w"></span>
 <span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
 
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;xe-0/0/11&quot;</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;xe-0/0/11&quot;</span><span class="w"></span>
 <span class="w">            </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
 <span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">leaf</span><span class="w"></span>
 <span class="w">            </span><span class="nt">mapping</span><span class="p">:</span><span class="w"> </span>
@@ -617,7 +617,7 @@
 <span class="w">    </span><span class="c1">### # CREATE A NEW RACK TYPE ON APSTRA SERVER</span><span class="w"></span>
 <span class="w">    </span><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create a Rack Type</span><span class="w"></span>
-<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">cdot65.apstra.design</span><span class="p p-Indicator">:</span><span class="w"></span>
+<span class="w">      </span><span class="nt">cdot65.apstra.design</span><span class="p">:</span><span class="w"></span>
 <span class="w">        </span><span class="c1"># define server connectivity options</span><span class="w"></span>
 <span class="w">        </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">apstra.dmz.home</span><span class="w"></span>
 <span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span><span class="w"></span>
@@ -632,7 +632,7 @@
 <span class="w">        </span><span class="nt">display_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cicd_test</span><span class="w"></span>
 <span class="w">        </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cicd_test</span><span class="w"></span>
 <span class="w">        </span><span class="nt">leafs</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">link_per_spine_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">link_per_spine_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">            </span><span class="nt">redundancy_protocol</span><span class="p">:</span><span class="w"></span>
 <span class="w">            </span><span class="nt">leaf_leaf_link_speed</span><span class="p">:</span><span class="w"></span>
 <span class="w">            </span><span class="nt">external_router_links</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span><span class="w"></span>
@@ -648,10 +648,10 @@
 <span class="w">            </span><span class="nt">logical_device</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cicd_test&quot;</span><span class="w"></span>
 <span class="w">            </span><span class="nt">leaf_leaf_link_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
 <span class="w">        </span><span class="nt">logical_devices</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">display_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AOS-1x10-1</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">display_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AOS-1x10-1</span><span class="w"></span>
 <span class="w">            </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AOS-1x10-1</span><span class="w"></span>
 <span class="w">            </span><span class="nt">panels</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">panel_layout</span><span class="p">:</span><span class="w"></span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">panel_layout</span><span class="p">:</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">row_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">column_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">                </span><span class="nt">port_indexing</span><span class="p">:</span><span class="w"></span>
@@ -659,17 +659,17 @@
 <span class="w">                    </span><span class="nt">start_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absolute</span><span class="w"></span>
 <span class="w">                </span><span class="nt">port_groups</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">speed</span><span class="p">:</span><span class="w"></span>
 <span class="w">                        </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">G</span><span class="w"></span>
 <span class="w">                        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
 <span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">leaf</span><span class="w"></span>
 <span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access</span><span class="w">    </span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">display_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vqfx_leaf</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">display_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vqfx_leaf</span><span class="w"></span>
 <span class="w">            </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;cicd_test&quot;</span><span class="w"></span>
 <span class="w">            </span><span class="nt">panels</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">panel_layout</span><span class="p">:</span><span class="w"></span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">panel_layout</span><span class="p">:</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">row_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">column_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">12</span><span class="w"></span>
 <span class="w">                </span><span class="nt">port_indexing</span><span class="p">:</span><span class="w"></span>
@@ -677,13 +677,13 @@
 <span class="w">                    </span><span class="nt">start_index</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">absolute</span><span class="w"></span>
 <span class="w">                </span><span class="nt">port_groups</span><span class="p">:</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span><span class="w"></span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">speed</span><span class="p">:</span><span class="w"></span>
 <span class="w">                        </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">G</span><span class="w"></span>
 <span class="w">                        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
 <span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spine</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">7</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">speed</span><span class="p">:</span><span class="w"></span>
 <span class="w">                        </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">G</span><span class="w"></span>
 <span class="w">                        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
@@ -691,20 +691,20 @@
 <span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">l2_server</span><span class="w"></span>
 <span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">access</span><span class="w"></span>
 <span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">l3_server</span><span class="w"></span>
-<span class="w">                    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">                  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">speed</span><span class="p">:</span><span class="w"></span>
 <span class="w">                        </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">G</span><span class="w"></span>
 <span class="w">                        </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">roles</span><span class="p">:</span><span class="w"></span>
 <span class="w">                        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">external_router</span><span class="w">    </span>
 <span class="w">        </span><span class="nt">servers</span><span class="p">:</span><span class="w"></span>
-<span class="w">            </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">            </span><span class="nt">ip_version</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ipv4</span><span class="w"></span>
 <span class="w">            </span><span class="nt">port_channel_id_min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
 <span class="w">            </span><span class="nt">port_channel_id_max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span><span class="w"></span>
 <span class="w">            </span><span class="nt">connectivity_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">l2</span><span class="w"></span>
 <span class="w">            </span><span class="nt">links</span><span class="p">:</span><span class="w"></span>
-<span class="w">                </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">link_per_switch_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">link_per_switch_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span><span class="w"></span>
 <span class="w">                </span><span class="nt">link_speed</span><span class="p">:</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">unit</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">G</span><span class="w"></span>
 <span class="w">                    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10</span><span class="w"></span>
