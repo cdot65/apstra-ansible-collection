@@ -114,6 +114,18 @@
     background-color: var(--md-code-bg-color);
     border: 2px solid var(--md-code-border-color);
   }
+  .highlight span.filename {
+    background-color: #272822;
+    border-bottom: .05rem solid var(--md-default-fg-color--lightest);
+    border-top-left-radius: .1rem;
+    border-top-right-radius: .1rem;
+    display: block;
+    font-size: .85em;
+    font-weight: 700;
+    margin-top: 1em;
+    padding: .6617647059em 1.1764705882em;
+    position: relative;
+  }
   .md-typeset .admonition, .md-typeset details {
       margin: 1.5625em 0;
       padding: 0 .6rem;
