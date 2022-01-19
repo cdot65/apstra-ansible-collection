@@ -5,7 +5,7 @@
   --md-default-fg-color--light:        #FFFFFF;
   --md-default-fg-color--lighter:      #FFFFFF;
   --md-default-fg-color--lightest:     #FFFFFF;
-  --md-default-bg-color:               #282828;
+  --md-default-bg-color:               #1D2021;
   --md-default-bg-color--light:        #32302f;
   --md-default-bg-color--lighter:      #504945;
   --md-default-bg-color--lightest:     #665c54;
@@ -89,7 +89,7 @@
     padding: 0 .2941176471em;
     font-size: 80%;
     word-break: break-word;
-    --md-code-bg-color:                  #272822;
+    --md-code-bg-color:                  #282828;
     --md-code-fg-color:                  #FFFFFF;
     --md-code-border-color:              #688d28;
     --md-code-hl-number-color:           #EBDBB2;
