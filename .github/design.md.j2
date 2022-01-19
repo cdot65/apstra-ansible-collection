@@ -55,7 +55,7 @@ Here is a basic example of using the module to mange your designs in Apstra
 
         - name: create 'api_token' object by setting it equal to value in response
           ansible.builtin.set_fact:
-            api_token: "{{ api_token.json.token }}"      
+            api_token: "example123"      
 
         ### #################################################################
         ### # CREATE A NEW LOGICAL DEVICE ON APSTRA SERVER
@@ -66,7 +66,7 @@ Here is a basic example of using the module to mange your designs in Apstra
             server: apstra.dmz.home
             port: 443
             validate_certs: False
-            api_token: "{{ api_token }}"
+            api_token: "example123"
 
             # define design element (logical device)
             type: "logical-devices"
@@ -93,9 +93,6 @@ Here is a basic example of using the module to mange your designs in Apstra
           # store the output of our task as a new variable to debug later
           register: cicd_test_logical_device
 
-        - debug:
-            msg: "{{ cicd_test_logical_device }}"
-
         ### #################################################################
         ### # CREATE A NEW INTERFACE MAPPING ON APSTRA SERVER
         ### #################################################################
@@ -105,7 +102,7 @@ Here is a basic example of using the module to mange your designs in Apstra
             server: apstra.dmz.home
             port: 443
             validate_certs: False
-            api_token: "{{ api_token }}"
+            api_token: "example123"
 
             # define design element (logical device)
             type: "interface-maps"
@@ -335,7 +332,7 @@ Here is a basic example of using the module to mange your designs in Apstra
             server: apstra.dmz.home
             port: 443
             validate_certs: False
-            api_token: "{{ api_token }}"
+            api_token: "example123"
 
             # define design element (logical device)
             type: "rack-types"
@@ -358,7 +355,7 @@ Here is a basic example of using the module to mange your designs in Apstra
                 label: cicd_test
                 leaf_leaf_l3_link_port_channel_id: 0
                 leaf_leaf_link_port_channel_id: 0
-                logical_device: "{{ cicd_test_logical_device['data']['id'] }}"
+                logical_device: "cicd_test"
                 leaf_leaf_link_count: 0
             logical_devices:
               - display_name: AOS-1x10-1
@@ -380,7 +377,7 @@ Here is a basic example of using the module to mange your designs in Apstra
                           - leaf
                           - access    
               - display_name: vqfx_leaf
-                id: "{{ cicd_test_logical_device['data']['id'] }}"
+                id: "cicd_test"
                 panels:
                   - panel_layout:
                       row_count: 1
@@ -435,8 +432,6 @@ Here is a basic example of using the module to mange your designs in Apstra
           # store the output of our task as a new variable to debug later
           register: cicd_test_rack_type
 
-        - debug:
-            msg: "{{ cicd_test_rack_type }}"
 ```
 
 ## Data Model
