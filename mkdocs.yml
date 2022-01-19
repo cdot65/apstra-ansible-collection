@@ -19,10 +19,10 @@ repo_url: https://github.com/cdot65/apstra-ansible-collection
 use_directory_urls: true
 nav:
   - Homepage: index.md
-  - Modules:
-    - blueprint: index.md
-    - design: index.md
-    - resources: index.md
+  - Ansible Modules:
+    - blueprint: blueprint.md
+    - design: design.md
+    - resources: resources.md
 
 markdown_extensions:
   - smarty
