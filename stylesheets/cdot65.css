@@ -98,6 +98,7 @@
     --md-code-hl-operator-color:         #FD971F;
     --md-code-hl-punctuation-color:      #FFFFFF;
     --md-code-hl-comment-color:          #7c4dff;
+    --md-code-hl-name-color:             #FFFFFF;
     --block-code-bg-color:               #665c54;
 
     border-radius: .1rem;
