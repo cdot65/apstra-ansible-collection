@@ -34,35 +34,35 @@ Here is a basic example of using the module to mange your resources in Apstra
 ### # CREATE RESOURCES PLAY
 ### #################################################################
 - hosts: localhost
-    gather_facts: False
-    become: False
-    tasks:
+  gather_facts: False
+  become: False
+  tasks:
     ### #################################################################
     ### # AUTHENTICATE AND RECEIVE AN API TOKEN FROM THE APSTRA SERVER
     ### #################################################################
     - name: retrieve an API token for our session
-        ansible.builtin.uri:
+      ansible.builtin.uri:
         url: https://apstra.dmz.home/api/user/login
         method: POST
         headers:
-            Content-Type: application/json
+          Content-Type: application/json
         status_code: 201
         validate_certs: False
         body_format: json
         body:
-            username: apstra
-            password: apstra123
+          username: apstra
+          password: apstra123
         register: api_token
 
     - name: create 'api_token' object by setting it equal to value in response
-        ansible.builtin.set_fact:
-        api_token: "example123"      
+      ansible.builtin.set_fact:
+        api_token: "example123"
 
     ### #################################################################
     ### # CREATE IP POOL RESOURCES ON APSTRA SERVER
     ### #################################################################
     - name: Create an IP Pool Resource with two prefixes
-        cdot65.apstra.resources:
+      cdot65.apstra.resources:
         # define server connectivity options
         server: apstra.dmz.home
         port: 443
@@ -74,12 +74,12 @@ Here is a basic example of using the module to mange your resources in Apstra
         tags: []
         type: "ip-pools"
         subnets:
-            - "100.1.1.0/24"
-            - "100.1.2.0/24"
+          - "100.1.1.0/24"
+          - "100.1.2.0/24"
 
         # state whether you want to create or delete this resource
         state: present
-        
+
         # store the output of our task as a new variable to debug later
         register: cicd_test_ippool
 
@@ -87,7 +87,7 @@ Here is a basic example of using the module to mange your resources in Apstra
     ### # CREATE IPv6 POOL RESOURCES ON APSTRA SERVER
     ### #################################################################
     - name: Create an IPv6 Pool Resource with two prefixes
-        cdot65.apstra.resources:
+      cdot65.apstra.resources:
         # define server connectivity options
         server: apstra.dmz.home
         port: 443
@@ -99,12 +99,12 @@ Here is a basic example of using the module to mange your resources in Apstra
         tags: []
         type: "ipv6-pools"
         subnets:
-            - "2001:db8::192:168:10:251/112"
-            - "2001:db8::192:168:20:251/112"
+          - "2001:db8::192:168:10:251/112"
+          - "2001:db8::192:168:20:251/112"
 
         # state whether you want to create or delete this resource
         state: present
-        
+
         # store the output of our task as a new variable to debug later
         register: cicd_test_ippool
 
@@ -112,7 +112,7 @@ Here is a basic example of using the module to mange your resources in Apstra
     ### # CREATE ASN POOL RESOURCES ON APSTRA SERVER
     ### #################################################################
     - name: Create an ASN Pool Resource with two ranges
-        cdot65.apstra.resources:
+      cdot65.apstra.resources:
         # define server connectivity options
         server: apstra.dmz.home
         port: 443
@@ -124,9 +124,9 @@ Here is a basic example of using the module to mange your resources in Apstra
         tags: []
         type: "asn-pools"
         ranges:
-            - first: 65300
+          - first: 65300
             last: 65399
-            - first: 65500
+          - first: 65500
             last: 65599
 
         # state whether you want to create or delete this resource
@@ -139,7 +139,7 @@ Here is a basic example of using the module to mange your resources in Apstra
     ### # CREATE VNI POOL RESOURCES ON APSTRA SERVER
     ### #################################################################
     - name: Create an VNI Pool Resource with two ranges
-        cdot65.apstra.resources:
+      cdot65.apstra.resources:
         # define server connectivity options
         server: apstra.dmz.home
         port: 443
@@ -151,9 +151,9 @@ Here is a basic example of using the module to mange your resources in Apstra
         tags: []
         type: "vni-pools"
         ranges:
-            - first: 65300
+          - first: 65300
             last: 65399
-            - first: 65500
+          - first: 65500
             last: 65599
 
         # state whether you want to create or delete this resource
@@ -161,7 +161,6 @@ Here is a basic example of using the module to mange your resources in Apstra
 
         # store the output of our task as a new variable to debug later
         register: cicd_test_vni_pool
-
 ```
 
 ## Data Model
