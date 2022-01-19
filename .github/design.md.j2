@@ -107,7 +107,7 @@ Here is a basic example of using the module to mange your designs in Apstra
             # define design element (logical device)
             type: "interface-maps"
             label: "cicd_test"
-            logical_device_id: "{{ cicd_test_logical_device['data']['id'] }}"
+            logical_device_id: "cicd_test"
             device_profile_id: "Juniper_vQFX"
             interfaces:
               - name: "xe-0/0/0"
@@ -319,9 +319,6 @@ Here is a basic example of using the module to mange your designs in Apstra
           
           # store the output of our task as a new variable to debug later
           register: cicd_test_interface_maps
-
-        - debug:
-            msg: "{{ cicd_test_interface_maps }}"
 
         ### #################################################################
         ### # CREATE A NEW RACK TYPE ON APSTRA SERVER
