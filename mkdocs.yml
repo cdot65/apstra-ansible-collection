@@ -12,7 +12,7 @@ theme:
         - python
         - shell
 extra_css:
-  - stylesheets/juniper.css
+  - stylesheets/cdot65.css
 copyright: Copyright &copy; 2022 cdot65
 repo_name: 'apstra-ansible-collection'
 repo_url: https://github.com/cdot65/apstra-ansible-collection
