@@ -28,7 +28,7 @@ Suported Resources:
 ## Example
 Here is a basic example of using the module to mange your resources in Apstra
 
-```yaml
+``` yaml title="cdot65/apstra/tests/tests.yaml"
 ---
 ### #################################################################
 ### # CREATE RESOURCES PLAY
@@ -168,7 +168,7 @@ Here is a basic example of using the module to mange your resources in Apstra
 
 If you'd like to see the options available for you within the module, have a look at the data model provided below.
 
-```python
+``` py title="cdot65/apstra/plugins/module_utils/apstra/api.py"
 @staticmethod
 def resources_spec():
     return dict(
