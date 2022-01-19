@@ -5,7 +5,7 @@
   --md-default-fg-color--light:        #FFFFFF;
   --md-default-fg-color--lighter:      #FFFFFF;
   --md-default-fg-color--lightest:     #FFFFFF;
-  --md-default-bg-color:               #282828;
+  --md-default-bg-color:               #1D2021;
   --md-default-bg-color--light:        #32302f;
   --md-default-bg-color--lighter:      #504945;
   --md-default-bg-color--lightest:     #665c54;
@@ -26,9 +26,9 @@
   
   --md-code-bg-color:                  #272822;
   --md-code-border-color:              #688d28;
-  --md-code-hl-constant-color:         #F92672;
+  --md-code-hl-constant-color:         #D79921;
   --md-code-hl-keyword-color:          #66D9EF;
-  --md-code-hl-string-color:           #A6E22E;
+  --md-code-hl-string-color:           #98971A;
   --md-code-hl-operator-color:         #FD971F;
   --md-code-hl-punctuation-color:      #FFFFFF;
   --block-code-bg-color:               #665c54;
@@ -89,15 +89,21 @@
     padding: 0 .2941176471em;
     font-size: 80%;
     word-break: break-word;
-    --md-code-bg-color:                  #272822;
+    --md-code-bg-color:                  #282828;
     --md-code-fg-color:                  #FFFFFF;
     --md-code-border-color:              #688d28;
-    --md-code-hl-constant-color:         #F92672;
-    --md-code-hl-keyword-color:          #66D9EF;
-    --md-code-hl-string-color:           #A6E22E;
-    --md-code-hl-operator-color:         #FD971F;
+    --md-code-hl-number-color:           #EBDBB2;
+    --md-code-hl-special-color:          #D65D0E;
+    --md-code-hl-function-color:         #689D6A;
+    --md-code-hl-constant-color:         #D79921;
+    --md-code-hl-keyword-color:          #CC241D;
+    --md-code-hl-string-color:           #98971A;
+    --md-code-hl-name-color:             #458588;
+    --md-code-hl-operator-color:         #689D6A;
     --md-code-hl-punctuation-color:      #FFFFFF;
-    --md-code-hl-comment-color:          #7c4dff;
+    --md-code-hl-comment-color:          #928374;
+    --md-code-hl-generic-color:          #665C54;
+    --md-code-hl-variable-color:         #FBF1C7;
     --block-code-bg-color:               #665c54;
 
     border-radius: .1rem;
@@ -107,6 +113,18 @@
   .highlight code {
     background-color: var(--md-code-bg-color);
     border: 2px solid var(--md-code-border-color);
+  }
+  .highlight span.filename {
+    background-color: #272822;
+    border-bottom: .05rem solid var(--md-default-fg-color--lightest);
+    border-top-left-radius: .1rem;
+    border-top-right-radius: .1rem;
+    display: block;
+    font-size: .85em;
+    font-weight: 700;
+    margin-top: 1em;
+    padding: .6617647059em 1.1764705882em;
+    position: relative;
   }
   .md-typeset .admonition, .md-typeset details {
       margin: 1.5625em 0;

@@ -137,3 +137,4 @@ cython_debug/
 .env
 cdot65/apstra/*tar.gz
 *.sh
+.github/.prettierrc

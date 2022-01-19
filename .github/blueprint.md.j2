@@ -16,7 +16,7 @@ Feature set as of version 0.0.1:
 ## Example
 Here is a basic example of using the module to mange your resources in Apstra
 
-```yaml
+``` yaml title="cdot65/apstra/tests/tests.yaml"
 ### #################################################################
 ### # CREATE A BLUEPRINT
 ### #################################################################
@@ -42,7 +42,7 @@ Here is a basic example of using the module to mange your resources in Apstra
 
 If you'd like to see the options available for you within the module, have a look at the data model provided below.
 
-```python
+``` py title="cdot65/apstra/plugins/module_utils/apstra/api.py"
 @staticmethod
 def blueprint_spec():
     return dict(
