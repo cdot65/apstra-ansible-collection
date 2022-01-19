@@ -437,7 +437,7 @@
 </ul>
 <h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">#</a></h2>
 <p>Here is a basic example of using the module to mange your resources in Apstra</p>
-<div class="highlight"><pre><span></span><code><span class="c1">### #################################################################</span><span class="w"></span>
+<div class="highlight"><span class="filename">cdot65/apstra/tests/tests.yaml</span><pre><span></span><code><span class="c1">### #################################################################</span><span class="w"></span>
 <span class="c1">### # CREATE A BLUEPRINT</span><span class="w"></span>
 <span class="c1">### #################################################################</span><span class="w"></span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;###</span><span class="nv"> </span><span class="s">CREATE</span><span class="nv"> </span><span class="s">BLUEPRINT</span><span class="nv"> </span><span class="s">cicd_template&quot;</span><span class="w"></span>
@@ -459,7 +459,7 @@
 </code></pre></div>
 <h2 id="data-model">Data Model<a class="headerlink" href="#data-model" title="Permanent link">#</a></h2>
 <p>If you&rsquo;d like to see the options available for you within the module, have a look at the data model provided below.</p>
-<div class="highlight"><pre><span></span><code><span class="nd">@staticmethod</span>
+<div class="highlight"><span class="filename">cdot65/apstra/plugins/module_utils/apstra/api.py</span><pre><span></span><code><span class="nd">@staticmethod</span>
 <span class="k">def</span> <span class="nf">blueprint_spec</span><span class="p">():</span>
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span>
         <span class="n">api_token</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span>
