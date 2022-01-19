@@ -33,14 +33,14 @@ Here is a basic example of using the module to mange your designs in Apstra
 ### # CREATE DESIGN PLAY
 ### #################################################################
 - hosts: localhost
-    gather_facts: False
-    become: False
-    tasks:
+  gather_facts: False
+  become: False
+  tasks:
     ### #################################################################
     ### # AUTHENTICATE AND RECEIVE AN API TOKEN FROM THE APSTRA SERVER
     ### #################################################################
     - name: retrieve an API token for our session
-        ansible.builtin.uri:
+      ansible.builtin.uri:
         url: https://apstra.dmz.home/api/user/login
         method: POST
         headers:
@@ -51,17 +51,17 @@ Here is a basic example of using the module to mange your designs in Apstra
         body:
             username: apstra
             password: apstra123
-        register: api_token
+      register: api_token
 
     - name: create 'api_token' object by setting it equal to value in response
-        ansible.builtin.set_fact:
+      ansible.builtin.set_fact:
         api_token: "example123"      
 
     ### #################################################################
     ### # CREATE A NEW LOGICAL DEVICE ON APSTRA SERVER
     ### #################################################################
     - name: Create a logical device
-        cdot65.apstra.design:
+      cdot65.apstra.design:
         # define server connectivity options
         server: apstra.dmz.home
         port: 443
@@ -72,20 +72,20 @@ Here is a basic example of using the module to mange your designs in Apstra
         type: "logical-devices"
         display_name: "cicd_test"
         panels:
-            - panel_layout:
-                row_count: 1
-                column_count: 12
+          - panel_layout:
+              row_count: 1
+              column_count: 12
             port_indexing:
                 order: "T-B, L-R"
                 schema: "absolute"
                 start_index: 1
             port_groups:
-                - count: 12
+              - count: 12
                 roles:
-                    - leaf
+                  - leaf
                 speed:
-                    value: 10
-                    unit: "G"
+                  value: 10
+                  unit: "G"
 
         # state whether you want to create or delete this resource
         state: present
@@ -97,7 +97,7 @@ Here is a basic example of using the module to mange your designs in Apstra
     ### # CREATE A NEW INTERFACE MAPPING ON APSTRA SERVER
     ### #################################################################
     - name: Create an interface mapping
-        cdot65.apstra.design:
+      cdot65.apstra.design:
         # define server connectivity options
         server: apstra.dmz.home
         port: 443
@@ -110,7 +110,7 @@ Here is a basic example of using the module to mange your designs in Apstra
         logical_device_id: "cicd_test"
         device_profile_id: "Juniper_vQFX"
         interfaces:
-            - name: "xe-0/0/0"
+          - name: "xe-0/0/0"
             roles:
                 - leaf
             mapping: 
@@ -127,7 +127,7 @@ Here is a basic example of using the module to mange your designs in Apstra
                 unit: "G"
                 value: 10
 
-            - name: "xe-0/0/11"
+          - name: "xe-0/0/11"
             roles:
                 - leaf
             mapping: 
@@ -154,7 +154,7 @@ Here is a basic example of using the module to mange your designs in Apstra
     ### # CREATE A NEW RACK TYPE ON APSTRA SERVER
     ### #################################################################
     - name: Create a Rack Type
-        cdot65.apstra.design:
+      cdot65.apstra.design:
         # define server connectivity options
         server: apstra.dmz.home
         port: 443
@@ -169,7 +169,7 @@ Here is a basic example of using the module to mange your designs in Apstra
         display_name: cicd_test
         id: cicd_test
         leafs:
-            - link_per_spine_count: 1
+          - link_per_spine_count: 1
             redundancy_protocol:
             leaf_leaf_link_speed:
             external_router_links: []
@@ -185,10 +185,10 @@ Here is a basic example of using the module to mange your designs in Apstra
             logical_device: "cicd_test"
             leaf_leaf_link_count: 0
         logical_devices:
-            - display_name: AOS-1x10-1
+          - display_name: AOS-1x10-1
             id: AOS-1x10-1
             panels:
-                - panel_layout:
+              - panel_layout:
                     row_count: 1
                     column_count: 1
                 port_indexing:
@@ -196,17 +196,17 @@ Here is a basic example of using the module to mange your designs in Apstra
                     start_index: 1
                     schema: absolute
                 port_groups:
-                    - count: 1
+                  - count: 1
                     speed:
                         unit: G
                         value: 10
                     roles:
                         - leaf
                         - access    
-            - display_name: vqfx_leaf
+          - display_name: vqfx_leaf
             id: "cicd_test"
             panels:
-                - panel_layout:
+              - panel_layout:
                     row_count: 1
                     column_count: 12
                 port_indexing:
@@ -214,13 +214,13 @@ Here is a basic example of using the module to mange your designs in Apstra
                     start_index: 1
                     schema: absolute
                 port_groups:
-                    - count: 4
+                  - count: 4
                     speed:
                         unit: G
                         value: 10
                     roles:
                         - spine
-                    - count: 7
+                  - count: 7
                     speed:
                         unit: G
                         value: 10
@@ -228,20 +228,20 @@ Here is a basic example of using the module to mange your designs in Apstra
                         - l2_server
                         - access
                         - l3_server
-                    - count: 1
+                  - count: 1
                     speed:
                         unit: G
                         value: 10
                     roles:
                         - external_router    
         servers:
-            - count: 1
+          - count: 1
             ip_version: ipv4
             port_channel_id_min: 0
             port_channel_id_max: 0
             connectivity_type: l2
             links:
-                - link_per_switch_count: 1
+              - link_per_switch_count: 1
                 link_speed:
                     unit: G
                     value: 10
