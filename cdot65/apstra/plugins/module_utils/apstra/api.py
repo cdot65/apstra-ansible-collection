@@ -487,6 +487,7 @@ class ApstraHelper:
                         type="dict",
                         options=dict(spine_leaf_links=dict(required=False, type="str")),
                     ),
+                    id=dict(required=False, type="str"),
                     rack_type_counts=dict(
                         required=False,
                         type="list",

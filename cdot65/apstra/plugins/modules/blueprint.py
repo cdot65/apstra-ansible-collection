@@ -172,6 +172,7 @@ def build_blueprint(resources, module, rest):
             # ###########################################################################
             design_element_data = dict(
                 design=module.params["design"],
+                id=module.params["label"],
                 init_type=module.params["init_type"],
                 template_id=module.params["template_id"],
                 label=module.params["label"],

@@ -664,8 +664,14 @@ def interface_maps(resources, module, rest):
             # ###########################################################################
             # design_element_data: parameters entered by the user to create the resource
             # ###########################################################################
+            interface_mapping_id = str()
+            if module.params["id"] is True:
+                interface_mapping_id = module.params["id"]
+            else:
+                interface_mapping_id = module.params["label"]
             design_element_data = dict(
                 device_profile_id=module.params["device_profile_id"],
+                id=interface_mapping_id,
                 logical_device_id=module.params["logical_device_id"],
                 interfaces=module.params["interfaces"],
                 label=module.params["label"],
@@ -722,8 +728,15 @@ def logical_device(resources, module, rest):
             # ###########################################################################
             # design_element_data: parameters entered by the user to create the resource
             # ###########################################################################
+            logical_device_id = str()
+            if module.params["id"] is True:
+                logical_device_id = module.params["id"]
+            else:
+                logical_device_id = module.params["display_name"]
+
             design_element_data = dict(
                 display_name=module.params["display_name"],
+                id=logical_device_id,
                 panels=module.params["panels"],
             )
 
@@ -792,6 +805,7 @@ def templates(resources, module, rest):
                 fabric_addressing_policy=module.params["design_template"][
                     "fabric_addressing_policy"
                 ],
+                id=module.params["design_template"]["display_name"],
                 rack_type_counts=module.params["design_template"]["rack_type_counts"],
                 rack_types=module.params["design_template"]["rack_types"],
                 spine=module.params["design_template"]["spine"],
