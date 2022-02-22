@@ -19,7 +19,7 @@ from invoke import task
 ### DOCKER PARAMETERS
 ### ---------------------------------------------------------------------------
 DOCKER_IMG = "ghcr.io/cdot65/apstra-ansible-collection"
-DOCKER_TAG = "0.0.1"
+DOCKER_TAG = "0.0.5"
 
 ### ---------------------------------------------------------------------------
 ### ANSIBLE GALAXY PARAMETERS
