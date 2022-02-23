@@ -112,6 +112,135 @@ class ApstraHelper:
         )
 
     @staticmethod
+    def device_profiles_spec():
+        return dict(
+            api_token=dict(
+                required=True,
+                fallback=(
+                    env_fallback,
+                    ["APSTRA_API_TOKEN", "APSTRA_API_TOKEN", "API_TOKEN"],
+                ),
+                no_log=True,
+                type="str",
+            ),
+            hardware_capabilities=dict(
+                required=False,
+                type="dict",
+                options=dict(
+                    userland=dict(required=False, type="int"),
+                    ram=dict(required=False, type="int"),
+                    asic=dict(required=False, type="str"),
+                    form_factor=dict(required=False, type="str"),
+                    ecmp_limit=dict(required=False, type="int"),
+                    cpu=dict(required=False, type="str"),
+                    routing_instance_supported=dict(
+                        required=False,
+                        type="list",
+                        elements="dict",
+                        options=dict(
+                            version=dict(
+                                required=True,
+                                type="str",
+                            ),
+                            value=dict(
+                                required=True,
+                                type="bool",
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            id=dict(required=False, type="str"),
+            label=dict(required=True, type="str"),
+            ports=dict(
+                required=False,
+                type="list",
+                elements="dict",
+                options=dict(
+                    port_id=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    slot_id=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    panel_id=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    connector_type=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    failure_domain_id=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    row_id=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    column_id=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    transformations=dict(
+                        required=False,
+                        type="list",
+                        elements="dict",
+                        options=dict(
+                            transformation_id=dict(required=False, type="int"),
+                            is_default=dict(required=False, type="bool"),
+                            interfaces=dict(
+                                required=False,
+                                type="list",
+                                elements="dict",
+                                options=dict(
+                                    interface_id=dict(required=False, type="int"),
+                                    name=dict(required=False, type="str"),
+                                    state=dict(required=False, type="str"),
+                                    speed=dict(
+                                        required=True,
+                                        type="dict",
+                                        options=dict(
+                                            unit=dict(required=False, type="str"),
+                                            value=dict(required=False, type="int"),
+                                        ),
+                                    ),
+                                    setting=dict(required=False, type="str"),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            selector=dict(
+                required=False,
+                type="dict",
+                options=dict(
+                    os_version=dict(required=False, type="str"),
+                    model=dict(required=False, type="str"),
+                    os=dict(required=False, type="str"),
+                    manufacturer=dict(required=False, type="str"),
+                ),
+            ),
+            slot_count=dict(required=False, type="int"),
+            software_capabilities=dict(
+                required=False,
+                type="dict",
+                options=dict(
+                    onie=dict(required=False, type="bool"),
+                    config_apply_support=dict(required=False, type="str"),
+                    lxc_support=dict(required=False, type="bool"),
+                ),
+            ),
+            server=dict(required=False, type="str"),
+            state=dict(required=True, choices=["absent", "present"], type="str"),
+            validate_certs=dict(type="bool", required=False, default=False),
+        )
+
+    @staticmethod
     def resources_spec():
         return dict(
             address=dict(required=False, type="str"),
@@ -835,6 +964,7 @@ class ApstraHelper:
             type=dict(
                 required=True,
                 choices=[
+                    "device-profiles",
                     "logical-devices",
                     "interface-maps",
                     "rack-types",
