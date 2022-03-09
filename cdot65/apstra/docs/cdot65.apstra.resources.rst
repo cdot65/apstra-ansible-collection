@@ -11,7 +11,7 @@ resources
 
 This module will allow you to manage your resources within AIS.
 
-Feature set as of version 0.0.7:
+Feature set as of version 0.0.9:
   - manage all resources
   - supports tagging
   - idempotent

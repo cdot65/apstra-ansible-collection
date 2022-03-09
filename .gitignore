@@ -138,3 +138,5 @@ cython_debug/
 cdot65/apstra/*tar.gz
 *.sh
 .github/.prettierrc
+cdot65/apstra/tests/group_vars
+cdot65/apstra/tests/tmp/blueprint.yaml

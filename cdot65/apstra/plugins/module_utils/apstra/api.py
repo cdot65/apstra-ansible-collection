@@ -1,19 +1,19 @@
-# -*- coding: utf-8 -*-
-
-# Copyright: (c) 2020, Calvin Remsburg (@cdot65) <cremsburg.dev@gmail.com.com>
+"""Apstra Rest API SDK."""
+# Copyright: (c) 2022, Calvin Remsburg (@cdot65) <cremsburg.dev@gmail.com.com>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import absolute_import, division, print_function
-
-__metaclass__ = type
-
 import json
-from ansible.module_utils.urls import fetch_url
-from ansible.module_utils._text import to_text
-from ansible.module_utils.basic import env_fallback
+from ansible.module_utils.urls import fetch_url  # pylint: disable=import-error
+from ansible.module_utils._text import to_text  # pylint: disable=import-error
+from ansible.module_utils.basic import env_fallback  # pylint: disable=import-error
+
+__metaclass__ = type  # pylint: disable=invalid-name
 
 
 class Response(object):
+    """Custom handling of response object."""
+
     def __init__(self, resp, info):
         self.body = None
         if resp:
@@ -22,6 +22,7 @@ class Response(object):
 
     @property
     def json(self):
+        """Return JSON object."""
         if not self.body:
             if "body" in self.info:
                 return json.loads(to_text(self.info["body"]))
@@ -33,10 +34,13 @@ class Response(object):
 
     @property
     def status_code(self):
+        """Return status code."""
         return self.info["status"]
 
 
 class ApstraHelper:
+    """Map out method of interacting with Apstra's REST API."""
+
     def __init__(self, module):
         self.module = module
         self.server = module.params.get("server")
@@ -53,16 +57,16 @@ class ApstraHelper:
         # Check if api_token is valid or not by testing the blueprints url
         response = self.get("blueprints")
         if response.status_code == 401:
-            self.module.fail_json(
-                msg="Failed to login using API token, please verify validity of API token."
-            )
+            self.module.fail_json(msg="Failed to login using API token, please verify validity of API token.")
 
     def _url_builder(self, path):
+        """Strip off trailing / within URI."""
         if path[0] == "/":
             path = path[1:]
         return f"{self.baseurl}/{path}"
 
     def send(self, method, path, data=None):
+        """Handle the sending of API calls."""
         url = self._url_builder(path)
         data = self.module.jsonify(data)
 
@@ -78,19 +82,24 @@ class ApstraHelper:
         return Response(resp, info)
 
     def get(self, path, data=None):
+        """HTTP GET method."""
         return self.send("GET", path, data)
 
     def put(self, path, data=None):
+        """HTTP PUT method."""
         return self.send("PUT", path, data)
 
     def post(self, path, data=None):
+        """HTTP POST method."""
         return self.send("POST", path, data)
 
     def delete(self, path, data=None):
+        """HTTP DELETE method."""
         return self.send("DELETE", path, data)
 
     @staticmethod
     def blueprint_spec():
+        """Define the data model for Blueprints."""
         return dict(
             api_token=dict(
                 required=True,
@@ -113,6 +122,7 @@ class ApstraHelper:
 
     @staticmethod
     def device_profiles_spec():
+        """Defined the data model for Device Profiles."""
         return dict(
             api_token=dict(
                 required=True,
@@ -242,6 +252,7 @@ class ApstraHelper:
 
     @staticmethod
     def resources_spec():
+        """Defined the data model for the various Resources."""
         return dict(
             address=dict(required=False, type="str"),
             asn=dict(required=False, type="int"),
@@ -294,6 +305,7 @@ class ApstraHelper:
 
     @staticmethod
     def design_spec():
+        """Defined the data model for Design."""
         return dict(
             access_switches=dict(required=False, type="list", elements="str"),
             api_token=dict(
@@ -314,6 +326,90 @@ class ApstraHelper:
                     ["APSTRA_USERNAME", "APSTRA_USERNAME", "USERNAME"],
                 ),
                 type="str",
+            ),
+            fabric_connectivity_design=dict(required=False, type="str"),
+            generic_systems=dict(
+                required=False,
+                type="list",
+                elements="dict",
+                options=dict(
+                    asn_domain=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    count=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    label=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    links=dict(
+                        required=False,
+                        type="list",
+                        elements="dict",
+                        options=dict(
+                            attachment_type=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            label=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            lag_mode=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            leaf_peer=dict(required=False, type="str"),
+                            link_per_switch_count=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            link_speed=dict(
+                                required=False,
+                                type="dict",
+                                options=dict(
+                                    unit=dict(
+                                        required=True,
+                                        type="str",
+                                    ),
+                                    value=dict(
+                                        required=True,
+                                        type="int",
+                                    ),
+                                ),
+                            ),
+                            tags=dict(required=True, type="list", elements="str"),
+                            target_switch_label=dict(
+                                required=False,
+                                type="str",
+                            ),
+                        ),
+                    ),
+                    logical_device=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    loopback=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    management_level=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    port_channel_id_max=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    port_channel_id_min=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    tags=dict(required=True, type="list", elements="str"),
+                ),
             ),
             id=dict(required=False, type="str"),
             interfaces=dict(
@@ -358,13 +454,6 @@ class ApstraHelper:
                 type="list",
                 elements="dict",
                 options=dict(
-                    external_router_facing=dict(
-                        required=True,
-                        type="bool",
-                    ),
-                    external_router_links=dict(
-                        required=True, type="list", elements="str"
-                    ),
                     label=dict(
                         required=False,
                         type="str",
@@ -413,6 +502,7 @@ class ApstraHelper:
                         required=False,
                         type="str",
                     ),
+                    tags=dict(required=True, type="list", elements="str"),
                 ),
             ),
             logical_devices=dict(
@@ -456,9 +546,7 @@ class ApstraHelper:
                                 elements="dict",
                                 options=dict(
                                     count=dict(required=False, type="int"),
-                                    roles=dict(
-                                        required=False, type="list", elements="str"
-                                    ),
+                                    roles=dict(required=False, type="list", elements="str"),
                                     speed=dict(
                                         required=True,
                                         type="dict",
@@ -600,9 +688,7 @@ class ApstraHelper:
                                 options=dict(
                                     all_routes=dict(required=False, type="bool"),
                                     l2edge_subnets=dict(required=False, type="bool"),
-                                    l3edge_server_links=dict(
-                                        required=False, type="bool"
-                                    ),
+                                    l3edge_server_links=dict(required=False, type="bool"),
                                     loopbacks=dict(required=False, type="bool"),
                                     spine_leaf_links=dict(required=False, type="bool"),
                                     static_routes=dict(required=False, type="bool"),
@@ -631,9 +717,7 @@ class ApstraHelper:
                         type="list",
                         elements="dict",
                         options=dict(
-                            access_switches=dict(
-                                required=False, type="list", elements="str"
-                            ),
+                            access_switches=dict(required=False, type="list", elements="str"),
                             description=dict(required=False, type="str"),
                             display_name=dict(required=False, type="str"),
                             fabric_connectivity_design=dict(required=False, type="str"),
@@ -650,24 +734,16 @@ class ApstraHelper:
                                         type="list",
                                         elements="dict",
                                         options=dict(
-                                            attachment_type=dict(
-                                                required=False, type="str"
-                                            ),
+                                            attachment_type=dict(required=False, type="str"),
                                             label=dict(required=False, type="str"),
                                             lag_mode=dict(required=False, type="str"),
-                                            link_per_switch_count=dict(
-                                                required=False, type="int"
-                                            ),
+                                            link_per_switch_count=dict(required=False, type="int"),
                                             link_speed=dict(
                                                 required=True,
                                                 type="dict",
                                                 options=dict(
-                                                    unit=dict(
-                                                        required=False, type="str"
-                                                    ),
-                                                    value=dict(
-                                                        required=False, type="int"
-                                                    ),
+                                                    unit=dict(required=False, type="str"),
+                                                    value=dict(required=False, type="int"),
                                                 ),
                                             ),
                                             tags=dict(
@@ -675,23 +751,15 @@ class ApstraHelper:
                                                 type="list",
                                                 elements="str",
                                             ),
-                                            target_switch_label=dict(
-                                                required=False, type="str"
-                                            ),
+                                            target_switch_label=dict(required=False, type="str"),
                                         ),
                                     ),
                                     logical_device=dict(required=False, type="str"),
                                     loopback=dict(required=False, type="str"),
                                     management_level=dict(required=False, type="str"),
-                                    port_channel_id_max=dict(
-                                        required=False, type="int"
-                                    ),
-                                    port_channel_id_min=dict(
-                                        required=False, type="int"
-                                    ),
-                                    tags=dict(
-                                        required=False, type="list", elements="str"
-                                    ),
+                                    port_channel_id_max=dict(required=False, type="int"),
+                                    port_channel_id_min=dict(required=False, type="int"),
+                                    tags=dict(required=False, type="list", elements="str"),
                                 ),
                             ),
                             id=dict(required=False, type="str"),
@@ -701,27 +769,13 @@ class ApstraHelper:
                                 elements="dict",
                                 options=dict(
                                     label=dict(required=False, type="str"),
-                                    leaf_leaf_l3_link_count=dict(
-                                        required=False, type="int"
-                                    ),
-                                    leaf_leaf_l3_link_port_channel_id=dict(
-                                        required=False, type="int"
-                                    ),
-                                    leaf_leaf_l3_link_speed=dict(
-                                        required=False, type="str"
-                                    ),
-                                    leaf_leaf_link_count=dict(
-                                        required=False, type="int"
-                                    ),
-                                    leaf_leaf_link_port_channel_id=dict(
-                                        required=False, type="int"
-                                    ),
-                                    leaf_leaf_link_speed=dict(
-                                        required=False, type="str"
-                                    ),
-                                    link_per_spine_count=dict(
-                                        required=False, type="int"
-                                    ),
+                                    leaf_leaf_l3_link_count=dict(required=False, type="int"),
+                                    leaf_leaf_l3_link_port_channel_id=dict(required=False, type="int"),
+                                    leaf_leaf_l3_link_speed=dict(required=False, type="str"),
+                                    leaf_leaf_link_count=dict(required=False, type="int"),
+                                    leaf_leaf_link_port_channel_id=dict(required=False, type="int"),
+                                    leaf_leaf_link_speed=dict(required=False, type="str"),
+                                    link_per_spine_count=dict(required=False, type="int"),
                                     link_per_spine_speed=dict(
                                         required=False,
                                         type="dict",
@@ -731,12 +785,8 @@ class ApstraHelper:
                                         ),
                                     ),
                                     logical_device=dict(required=True, type="str"),
-                                    redundancy_protocol=dict(
-                                        required=False, type="str"
-                                    ),
-                                    tags=dict(
-                                        required=False, type="list", elements="str"
-                                    ),
+                                    redundancy_protocol=dict(required=False, type="str"),
+                                    tags=dict(required=False, type="list", elements="str"),
                                 ),
                             ),
                             logical_devices=dict(
@@ -755,12 +805,8 @@ class ApstraHelper:
                                                 required=False,
                                                 type="dict",
                                                 options=dict(
-                                                    column_count=dict(
-                                                        required=False, type="int"
-                                                    ),
-                                                    row_count=dict(
-                                                        required=False, type="int"
-                                                    ),
+                                                    column_count=dict(required=False, type="int"),
+                                                    row_count=dict(required=False, type="int"),
                                                 ),
                                             ),
                                             port_groups=dict(
@@ -768,9 +814,7 @@ class ApstraHelper:
                                                 type="list",
                                                 elements="dict",
                                                 options=dict(
-                                                    count=dict(
-                                                        required=False, type="int"
-                                                    ),
+                                                    count=dict(required=False, type="int"),
                                                     roles=dict(
                                                         required=False,
                                                         type="list",
@@ -796,15 +840,9 @@ class ApstraHelper:
                                                 required=True,
                                                 type="dict",
                                                 options=dict(
-                                                    order=dict(
-                                                        required=True, type="str"
-                                                    ),
-                                                    schema=dict(
-                                                        required=True, type="str"
-                                                    ),
-                                                    start_index=dict(
-                                                        required=True, type="int"
-                                                    ),
+                                                    order=dict(required=True, type="str"),
+                                                    schema=dict(required=True, type="str"),
+                                                    start_index=dict(required=True, type="int"),
                                                 ),
                                             ),
                                         ),
@@ -825,38 +863,24 @@ class ApstraHelper:
                                         type="list",
                                         elements="dict",
                                         options=dict(
-                                            attachment_type=dict(
-                                                type="str", required=True
-                                            ),
+                                            attachment_type=dict(type="str", required=True),
                                             label=dict(type="str", required=True),
                                             lag_mode=dict(type="str", required=False),
-                                            link_per_switch_count=dict(
-                                                type="int", required=False
-                                            ),
+                                            link_per_switch_count=dict(type="int", required=False),
                                             link_speed=dict(
                                                 required=True,
                                                 type="dict",
                                                 options=dict(
-                                                    unit=dict(
-                                                        type="str", required=False
-                                                    ),
-                                                    value=dict(
-                                                        type="int", required=False
-                                                    ),
+                                                    unit=dict(type="str", required=False),
+                                                    value=dict(type="int", required=False),
                                                 ),
                                             ),
-                                            target_switch_label=dict(
-                                                type="str", required=True
-                                            ),
+                                            target_switch_label=dict(type="str", required=True),
                                         ),
                                     ),
                                     logical_device=dict(type="str", required=True),
-                                    port_channel_id_max=dict(
-                                        type="int", required=False
-                                    ),
-                                    port_channel_id_min=dict(
-                                        type="int", required=False
-                                    ),
+                                    port_channel_id_max=dict(type="int", required=False),
+                                    port_channel_id_min=dict(type="int", required=False),
                                 ),
                             ),
                             tags=dict(
@@ -892,12 +916,8 @@ class ApstraHelper:
                                                 required=False,
                                                 type="dict",
                                                 options=dict(
-                                                    column_count=dict(
-                                                        required=False, type="int"
-                                                    ),
-                                                    row_count=dict(
-                                                        required=False, type="int"
-                                                    ),
+                                                    column_count=dict(required=False, type="int"),
+                                                    row_count=dict(required=False, type="int"),
                                                 ),
                                             ),
                                             port_groups=dict(
@@ -905,9 +925,7 @@ class ApstraHelper:
                                                 type="list",
                                                 elements="dict",
                                                 options=dict(
-                                                    count=dict(
-                                                        required=False, type="int"
-                                                    ),
+                                                    count=dict(required=False, type="int"),
                                                     roles=dict(
                                                         required=False,
                                                         type="list",
@@ -933,15 +951,9 @@ class ApstraHelper:
                                                 required=False,
                                                 type="dict",
                                                 options=dict(
-                                                    order=dict(
-                                                        type="str", required=False
-                                                    ),
-                                                    schema=dict(
-                                                        type="str", required=False
-                                                    ),
-                                                    start_index=dict(
-                                                        type="int", required=False
-                                                    ),
+                                                    order=dict(type="str", required=False),
+                                                    schema=dict(type="str", required=False),
+                                                    start_index=dict(type="int", required=False),
                                                 ),
                                             ),
                                         ),
@@ -955,11 +967,14 @@ class ApstraHelper:
                     virtual_network_policy=dict(
                         required=True,
                         type="dict",
-                        options=dict(
-                            overlay_control_protocol=dict(required=True, type="str")
-                        ),
+                        options=dict(overlay_control_protocol=dict(required=True, type="str")),
                     ),
                 ),
+            ),
+            tags=dict(
+                required=False,
+                type="list",
+                elements="str",
             ),
             type=dict(
                 required=True,

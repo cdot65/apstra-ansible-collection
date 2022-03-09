@@ -1,6 +1,6 @@
 namespace: cdot65
 name: apstra
-version: 0.0.7
+version: 0.0.9
 readme: README.md
 authors:
   - Calvin Remsburg <cremsburg.dev@gmail.com.com>
