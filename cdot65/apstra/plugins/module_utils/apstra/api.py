@@ -57,7 +57,7 @@ class ApstraHelper:
         # Check if api_token is valid or not by testing the blueprints url
         response = self.get("blueprints")
         if response.status_code == 401:
-            self.module.fail_json(msg="Failed to login using API token, please verify validity of API token.")
+            self.module.fail_json(msg="Failed to login using API token, verify token.")
 
     def _url_builder(self, path):
         """Strip off trailing / within URI."""
@@ -307,7 +307,90 @@ class ApstraHelper:
     def design_spec():
         """Defined the data model for Design."""
         return dict(
-            access_switches=dict(required=False, type="list", elements="str"),
+            access_switches=dict(
+                required=False,
+                type="list",
+                elements="dict",
+                options=dict(
+                    access_access_link_count=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    access_access_link_speed=dict(
+                        required=False,
+                        type="dict",
+                        options=dict(
+                            unit=dict(
+                                required=True,
+                                type="str",
+                            ),
+                            value=dict(
+                                required=True,
+                                type="int",
+                            ),
+                        ),
+                    ),
+                    instance_count=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    label=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    links=dict(
+                        required=False,
+                        type="list",
+                        elements="dict",
+                        options=dict(
+                            attachment_type=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            label=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            lag_mode=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            link_per_switch_count=dict(
+                                required=False,
+                                type="int",
+                            ),
+                            link_speed=dict(
+                                required=False,
+                                type="dict",
+                                options=dict(
+                                    unit=dict(
+                                        required=True,
+                                        type="str",
+                                    ),
+                                    value=dict(
+                                        required=True,
+                                        type="int",
+                                    ),
+                                ),
+                            ),
+                            tags=dict(required=True, type="list", elements="str"),
+                            target_switch_label=dict(
+                                required=False,
+                                type="str",
+                            ),
+                        ),
+                    ),
+                    logical_device=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    redundancy_protocol=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    tags=dict(required=True, type="list", elements="str"),
+                ),
+            ),
             api_token=dict(
                 required=True,
                 fallback=(
@@ -365,7 +448,7 @@ class ApstraHelper:
                             leaf_peer=dict(required=False, type="str"),
                             link_per_switch_count=dict(
                                 required=False,
-                                type="str",
+                                type="int",
                             ),
                             link_speed=dict(
                                 required=False,
@@ -381,6 +464,7 @@ class ApstraHelper:
                                     ),
                                 ),
                             ),
+                            switch_peer=dict(required=False, type="str"),
                             tags=dict(required=True, type="list", elements="str"),
                             target_switch_label=dict(
                                 required=False,
@@ -487,7 +571,7 @@ class ApstraHelper:
                         type="int",
                     ),
                     link_per_spine_speed=dict(
-                        required=True,
+                        required=False,
                         type="dict",
                         options=dict(
                             unit=dict(required=False, type="str"),
@@ -986,6 +1070,361 @@ class ApstraHelper:
                     "templates",
                 ],
                 type="str",
+            ),
+            validate_certs=dict(type="bool", required=False, default=False),
+        )
+
+    @staticmethod
+    def rack_spec():
+        """Defined the data model for creating a new rack type."""
+        return dict(
+            access_switches=dict(
+                required=False,
+                type="list",
+                elements="dict",
+                options=dict(
+                    access_access_link_count=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    access_access_link_speed=dict(
+                        required=False,
+                        type="dict",
+                        options=dict(
+                            unit=dict(
+                                required=True,
+                                type="str",
+                            ),
+                            value=dict(
+                                required=True,
+                                type="int",
+                            ),
+                        ),
+                    ),
+                    instance_count=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    label=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    links=dict(
+                        required=False,
+                        type="list",
+                        elements="dict",
+                        options=dict(
+                            attachment_type=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            label=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            lag_mode=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            link_per_switch_count=dict(required=False, type="int"),
+                            link_speed=dict(
+                                required=False,
+                                type="dict",
+                                options=dict(
+                                    unit=dict(
+                                        required=True,
+                                        type="str",
+                                    ),
+                                    value=dict(
+                                        required=True,
+                                        type="int",
+                                    ),
+                                ),
+                            ),
+                            tags=dict(required=True, type="list", elements="str"),
+                            target_switch_label=dict(
+                                required=False,
+                                type="str",
+                            ),
+                        ),
+                    ),
+                    logical_device=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    redundancy_protocol=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    tags=dict(required=True, type="list", elements="str"),
+                ),
+            ),
+            api_token=dict(
+                required=True,
+                fallback=(
+                    env_fallback,
+                    ["APSTRA_API_TOKEN", "APSTRA_API_TOKEN", "API_TOKEN"],
+                ),
+                no_log=True,
+                type="str",
+            ),
+            description=dict(required=False, type="str"),
+            display_name=dict(
+                required=False,
+                type="str",
+            ),
+            fabric_connectivity_design=dict(required=True, type="str"),
+            generic_systems=dict(
+                required=False,
+                type="list",
+                elements="dict",
+                options=dict(
+                    asn_domain=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    count=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    label=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    links=dict(
+                        required=False,
+                        type="list",
+                        elements="dict",
+                        options=dict(
+                            attachment_type=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            label=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            lag_mode=dict(
+                                required=False,
+                                type="str",
+                            ),
+                            link_per_switch_count=dict(
+                                required=False,
+                                type="int",
+                            ),
+                            link_speed=dict(
+                                required=False,
+                                type="dict",
+                                options=dict(
+                                    unit=dict(
+                                        required=True,
+                                        type="str",
+                                    ),
+                                    value=dict(
+                                        required=True,
+                                        type="int",
+                                    ),
+                                ),
+                            ),
+                            switch_peer=dict(required=False, type="str"),
+                            tags=dict(required=True, type="list", elements="str"),
+                            target_switch_label=dict(
+                                required=False,
+                                type="str",
+                            ),
+                        ),
+                    ),
+                    logical_device=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    loopback=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    management_level=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    port_channel_id_max=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    port_channel_id_min=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    tags=dict(required=True, type="list", elements="str"),
+                ),
+            ),
+            id=dict(required=False, type="str"),
+            leafs=dict(
+                required=False,
+                type="list",
+                elements="dict",
+                options=dict(
+                    label=dict(
+                        required=False,
+                        type="str",
+                    ),
+                    leaf_leaf_l3_link_count=dict(
+                        required=False,
+                        type="int",
+                    ),
+                    leaf_leaf_l3_link_port_channel_id=dict(
+                        required=False,
+                        type="int",
+                    ),
+                    leaf_leaf_l3_link_speed=dict(
+                        required=False,
+                        type="str",
+                    ),
+                    leaf_leaf_link_count=dict(
+                        required=False,
+                        type="int",
+                    ),
+                    leaf_leaf_link_port_channel_id=dict(
+                        required=False,
+                        type="int",
+                    ),
+                    leaf_leaf_link_speed=dict(
+                        required=False,
+                        type="str",
+                    ),
+                    link_per_spine_count=dict(
+                        required=False,
+                        type="int",
+                    ),
+                    logical_device=dict(
+                        required=False,
+                        type="str",
+                    ),
+                    redundancy_protocol=dict(
+                        required=False,
+                        type="str",
+                    ),
+                    tags=dict(required=True, type="list", elements="str"),
+                ),
+            ),
+            logical_devices=dict(
+                required=False,
+                type="list",
+                elements="dict",
+                options=dict(
+                    display_name=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    id=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    panels=dict(
+                        required=False,
+                        type="list",
+                        elements="dict",
+                        options=dict(
+                            panel_layout=dict(
+                                required=True,
+                                type="dict",
+                                options=dict(
+                                    row_count=dict(required=False, type="int"),
+                                    column_count=dict(required=False, type="int"),
+                                ),
+                            ),
+                            port_indexing=dict(
+                                required=True,
+                                type="dict",
+                                options=dict(
+                                    order=dict(required=False, type="str"),
+                                    start_index=dict(required=False, type="int"),
+                                    schema=dict(required=False, type="str"),
+                                ),
+                            ),
+                            port_groups=dict(
+                                required=False,
+                                type="list",
+                                elements="dict",
+                                options=dict(
+                                    count=dict(required=False, type="int"),
+                                    roles=dict(required=False, type="list", elements="str"),
+                                    speed=dict(
+                                        required=True,
+                                        type="dict",
+                                        options=dict(
+                                            unit=dict(required=False, type="str"),
+                                            value=dict(required=False, type="int"),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+            port=dict(required=False, type="int"),
+            server=dict(required=False, type="str"),
+            servers=dict(
+                required=False,
+                type="list",
+                elements="dict",
+                options=dict(
+                    connectivity_type=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    count=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    label=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    logical_device=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    ip_version=dict(
+                        required=True,
+                        type="str",
+                    ),
+                    port_channel_id_min=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    port_channel_id_max=dict(
+                        required=True,
+                        type="int",
+                    ),
+                    links=dict(
+                        required=False,
+                        type="list",
+                        elements="dict",
+                        options=dict(
+                            attachment_type=dict(required=False, type="str"),
+                            label=dict(required=False, type="str"),
+                            lag_mode=dict(required=False, type="str"),
+                            leaf_peer=dict(required=False, type="str"),
+                            link_per_switch_count=dict(required=False, type="int"),
+                            link_speed=dict(
+                                required=True,
+                                type="dict",
+                                options=dict(
+                                    unit=dict(required=False, type="str"),
+                                    value=dict(required=False, type="int"),
+                                ),
+                            ),
+                            target_switch_label=dict(required=False, type="str"),
+                        ),
+                    ),
+                ),
+            ),
+            state=dict(required=True, choices=["absent", "present"], type="str"),
+            tags=dict(
+                required=False,
+                type="list",
+                elements="str",
             ),
             validate_certs=dict(type="bool", required=False, default=False),
         )
