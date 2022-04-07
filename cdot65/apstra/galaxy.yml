@@ -1,24 +1,24 @@
 namespace: cdot65
 name: apstra
-version: 0.0.1
+version: 0.0.10
 readme: README.md
 authors:
-- Calvin Remsburg <cremsburg.dev@gmail.com.com>
+  - Calvin Remsburg <cremsburg.dev@gmail.com.com>
 description: Ansible collection for Juniper's Apstra solution
 license:
-- GPL-2.0-or-later
-license_file: ''
-tags: 
-    - networking
-    - datacenter
-    - juniper
-    - apstra
-    - aos
+  - GPL-2.0-or-later
+license_file: ""
+tags:
+  - networking
+  - datacenter
+  - juniper
+  - apstra
+  - aos
 dependencies: {}
 repository: https://github.com/cdot65/apstra-ansible-collection
 documentation: https://cdot65.github.io/apstra-ansible-collection/
 homepage: https://cdot65.github.io/apstra-ansible-collection/
 issues: https://github.com/cdot65/apstra-ansible-collection/issues
 build_ignore:
-- tests
-- '*.tar.gz'
+  - tests
+  - "*.tar.gz"
