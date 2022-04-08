@@ -102,7 +102,8 @@ def build_blueprint(resources, module, rest):
             response = rest.delete(f"blueprints/{design_element['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
-            module.exit_json(changed=False, data="Blueprint does not exist, exiting")
+            module.exit_json(
+                changed=False, data="Blueprint does not exist, exiting")
 
     # #######################################################################
     # looking to either create or update a blueprint
@@ -119,7 +120,7 @@ def build_blueprint(resources, module, rest):
             # #######################################################################
             design_element_data = dict(
                 design=module.params["design"],
-                id=module.params["label"],
+                id=module.params["id"],
                 init_type=module.params["init_type"],
                 template_id=module.params["template_id"],
                 label=module.params["label"],
@@ -149,14 +150,16 @@ def core(module):
     # #########################################################################
     response = rest.get("blueprints")
     if response.status_code != 200:
-        module.fail_json(msg=f"Failed to receive a proper response from the API: {response.info}")
+        module.fail_json(
+            msg=f"Failed to receive a proper response from the API: {response.info}")
 
     resources = response.json
 
     if isinstance(resources, dict):
         pass
     else:
-        module.fail_json(msg="The response returned is not in a dictionary format, contant support")
+        module.fail_json(
+            msg="The response returned is not in a dictionary format, contant support")
 
     build_blueprint(resources, module, rest)
 
@@ -180,7 +183,8 @@ def main():
     try:
         core(module)
     except Exception as exception_error:  # pylint: disable=broad-except
-        module.fail_json(msg=to_native(exception_error), exception=format_exc())
+        module.fail_json(msg=to_native(exception_error),
+                         exception=format_exc())
 
 
 if __name__ == "__main__":
