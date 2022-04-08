@@ -321,7 +321,8 @@ def rack_types(resources, module, rest):
             response = rest.delete(f"design/rack-types/{rack_type['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
-            module.exit_json(changed=False, data="Rack Type does not exist, exiting")
+            module.exit_json(
+                changed=False, data="Rack Type does not exist, exiting")
 
     else:
         if rack_type["provisioned"] is False:
@@ -356,7 +357,8 @@ def rack_types(resources, module, rest):
                 tags=module.params["tags"],
             )
 
-            response = rest.put(f"design/rack-types/{rack_type_data['id']}", data=rack_type_data)
+            response = rest.put(
+                f"design/rack-types/{rack_type_data['id']}", data=rack_type_data)
 
             module.exit_json(changed=True, data=response.json)
 
@@ -387,14 +389,16 @@ def core(module):
 
     response = rest.get("design/rack-types")
     if response.status_code != 200:
-        module.fail_json(msg=f"Failed to receive a response from the API:\n{response.info}")
+        module.fail_json(
+            msg=f"Failed to receive a response from the API:\n{response.info}")
 
     resources = response.json
 
     if isinstance(resources, dict):
         pass
     else:
-        module.fail_json(msg="The response returned is not in a dictionary format")
+        module.fail_json(
+            msg="The response returned is not in a dictionary format")
 
     rack_types(resources, module, rest)
 
