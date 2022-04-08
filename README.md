@@ -14,11 +14,13 @@ Ansible has performed a significant change to their versioning lately, we will b
 
 Here is a short list of modules included within the collection, expect feature parity with the Swagger before this project hits `version 0.1.0`
 
-Name | Description
----- | -----------
-[cdot65.apstra.blueprint](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.blueprint.rst)|Manage Blueprints
-[cdot65.apstra.design](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.design.rst)|Manage the Design elements
-[cdot65.apstra.resources](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.resources.rst)|Manage the Resources elements
+| Name                                                                                                                                      | Description             |
+| ----------------------------------------------------------------------------------------------------------------------------------------- | ----------------------- |
+| [cdot65.apstra.blueprint](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.blueprint.rst) | Manage Blueprints       |
+| [cdot65.apstra.design](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.design.rst)       | Manage Design elements  |
+| [cdot65.apstra.rack](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.rack.rst)           | Manage Rack Types       |
+| [cdot65.apstra.resources](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.resources.rst) | Manage Resources        |
+| [cdot65.apstra.template](https://github.com/cdot65/apstra-ansible-collection/blob/master/cdot65/apstra/docs/cdot65.apstra.template.rst)   | Manage Design Templates |
 
 ## 🚀 Executing the playbook
 
@@ -32,7 +34,6 @@ After installing the collections, you can call the modules by using their full n
   gather_facts: False
   become: False
   tasks:
-    
     - name: Manage an IP Pool Resource with two prefixes
       cdot65.apstra.resources:
         # define server connectivity options
@@ -48,7 +49,6 @@ After installing the collections, you can call the modules by using their full n
 
         # state whether you want to create or delete this resource
         state: present
-
 ```
 
 Then simply run your playbook
@@ -59,7 +59,7 @@ ansible-playbook test.yaml
 
 If you used Ansible Vault to encrypt your secrets, you need to append the `--ask-vault-pass` to your command.
 
-##  Very Important!
+## Very Important!
 
 Please make sure to manage your sensative information carfully. While the modules support the parameter of `api_key`, this should never be statically entered with your token in clear text.
 
