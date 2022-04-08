@@ -280,6 +280,7 @@ class ApstraHelper:
                 ),
                 type="str",
             ),
+            id=dict(required=True, type="str"),
             ipv6_address=dict(required=False, type="str"),
             port=dict(required=False, type="int"),
             ranges=dict(

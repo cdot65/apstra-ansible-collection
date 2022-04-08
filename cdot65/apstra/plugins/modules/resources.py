@@ -1,10 +1,17 @@
+"""
+Ansible module to build resources within Apstra
+Copyright: (c) 2022, Calvin Remsburg (@cdot65) <cremsburg.dev@gmail.com.com>
+GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+"""
 #!/usr/bin/python
 
-# Copyright: (c) 2020, Calvin Remsburg (@cdot65) <cremsburg.dev@gmail.com.com>
-# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 from __future__ import absolute_import, division, print_function
+from traceback import format_exc
+from ansible.module_utils.basic import AnsibleModule  # pylint: disable=import-error
+from ansible.module_utils._text import to_native  # pylint: disable=import-error
+from ansible_collections.cdot65.apstra.plugins.module_utils.apstra.api import ApstraHelper  # pylint: disable=import-error
 
-__metaclass__ = type
+__metaclass__ = type  # pylint: disable=invalid-name
 
 DOCUMENTATION = r"""
 ---
@@ -123,7 +130,7 @@ author:
 
 EXAMPLES = r"""
 ### #################################################################
-### # AUTHENTICATE AND RECEIVE AN API TOKEN FROM THE APSTRA SERVER
+# AUTHENTICATE AND RECEIVE AN API TOKEN FROM THE APSTRA SERVER
 ### #################################################################
 - name: retrieve an API token for our session
     ansible.builtin.uri:
@@ -170,7 +177,7 @@ EXAMPLES = r"""
     msg: "{{ cicd_test_ippool }}"
 
 ### #################################################################
-### # CREATE IPv6 POOL RESOURCES ON APSTRA SERVER
+# CREATE IPv6 POOL RESOURCES ON APSTRA SERVER
 ### #################################################################
 - name: Create an IPv6 Pool Resource with two prefixes
     cdot65.apstra.resources:
@@ -198,7 +205,7 @@ EXAMPLES = r"""
     msg: "{{ cicd_test_ippool }}"
 
 ### #################################################################
-### # CREATE ASN POOL RESOURCES ON APSTRA SERVER
+# CREATE ASN POOL RESOURCES ON APSTRA SERVER
 ### #################################################################
 - name: Create an ASN Pool Resource with two ranges
     cdot65.apstra.resources:
@@ -228,7 +235,7 @@ EXAMPLES = r"""
     msg: "{{ cicd_test_asn_pool }}"
 
 ### #################################################################
-### # CREATE VNI POOL RESOURCES ON APSTRA SERVER
+# CREATE VNI POOL RESOURCES ON APSTRA SERVER
 ### #################################################################
 - name: Create an VNI Pool Resource with two ranges
     cdot65.apstra.resources:
@@ -258,7 +265,7 @@ EXAMPLES = r"""
     msg: "{{ cicd_test_vni_pool }}"
 
 ### #################################################################
-### # CREATE VLAN POOL RESOURCES ON APSTRA SERVER
+# CREATE VLAN POOL RESOURCES ON APSTRA SERVER
 ### #################################################################
 - name: Create an VLAN Pool Resource with two ranges
     cdot65.apstra.resources:
@@ -288,7 +295,7 @@ EXAMPLES = r"""
     msg: "{{ cicd_test_vlan_pool }}"
 
 ### #################################################################
-### # CREATE EXTERNAL ROUTER RESOURCE ON APSTRA SERVER
+# CREATE EXTERNAL ROUTER RESOURCE ON APSTRA SERVER
 ### #################################################################
 - name: Create an External Router Resource
     cdot65.apstra.resources:
@@ -318,44 +325,55 @@ EXAMPLES = r"""
 """
 
 
-from traceback import format_exc
-from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.cdot65.apstra.plugins.module_utils.apstra.api import (
-    ApstraHelper,
-)
-from ansible.module_utils._text import to_native
-
-
 def external_routers(resources, module, rest):
+    """Here we create, update, or delete external routers.
+
+    --------------------------------------------------------------------------
+    Determine if the external router already exists
+    --------------------------------------------------------------------------
+      - create a new dictionary with a k/v of 'provisioned' set to False
+      - set to True if the resource has already been provisioned
+      - store it's ID
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'absent'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we delete the external router
+      - if False, report back that external router didn't exist
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'present'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the external router
+      - if False, create the new external router
+
+    --------------------------------------------------------------------------
+    Passing user's arguments into the module
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the external router
+      - if False, create the new external router
+    """
     if isinstance(resources, dict):
         pass
     else:
         module.fail_json(
-            msg=f"The response returned is not in a dictionary format, contant support"
+            msg="The response returned is not in a dictionary format"
         )
 
-    # ########################################################################
-    # we need to see if our Resource has already been created, this determine
-    #   our future API calls.
-    # we create a new dictionary with a k/v of 'provisioned' set to False.
-    #   if the site has already been provisioned, we'll flip this bit to True
-    #   and store it's site ID
-    # ########################################################################
     external_router = dict()
     external_router["display_name"] = None
     external_router["id"] = None
     external_router["provisioned"] = False
+
     for each in resources["items"]:
         if each["display_name"] == module.params["display_name"]:
             external_router["display_name"] = each["display_name"]
             external_router["id"] = each["id"]
             external_router["provisioned"] = True
 
-    # #######################################################################
-    # if the user set the state to 'absent', then we need to either delete
-    #   an existing site, or report back to the user that the site didn't
-    #   exist.
-    # #######################################################################
     if module.params["state"] == "absent":
         if external_router["provisioned"] is True:
             response = rest.delete(
@@ -367,33 +385,23 @@ def external_routers(resources, module, rest):
                 changed=False, data="External Router does not exist, exiting"
             )
 
-    # #######################################################################
-    # if you made it here, then you're looking to either create an existing,
-    #   or update an existing, ip pool
-    # this logic can get a little harry, so stick with the comments when
-    #   you're deep in the woods and need a guiding light
-    # #######################################################################
     else:
-
-        # #######################################################################
-        # create the external_router if it doesn't already exist
-        # #######################################################################
         if external_router["provisioned"] is False:
 
-            # ###########################################################################
-            # external_router_data: parameters entered by the user to create the resource
-            # ###########################################################################
-            external_router_data = dict(
+            # setting parameters to create the router
+            router_data = dict(
                 display_name=module.params["display_name"],
                 asn=module.params["asn"],
+                id=module.params["id"],
                 address=module.params["address"],
                 ipv6_address=module.params["ipv6_address"],
             )
 
+            # create the router and store the response of our API
             response = rest.post(
-                f"resources/external-routers", data=external_router_data
+                "resources/external-routers", data=router_data
             )
-            external_router_data["id"] = response.json["id"]
+            router_data["id"] = response.json["id"]
 
             module.exit_json(changed=True, data=response.json)
 
@@ -401,396 +409,429 @@ def external_routers(resources, module, rest):
 
 
 def ipv4_pool(resources, module, rest):
+    """Here we create, update, or delete IPv4 pools.
+
+    --------------------------------------------------------------------------
+    Determine if the IP pool already exists
+    --------------------------------------------------------------------------
+      - create a new dictionary with a k/v of 'provisioned' set to False
+      - set to True if the resource has already been provisioned
+      - store it's ID
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'absent'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we delete the IP pool
+      - if False, report back that IP pool didn't exist
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'present'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the IP pool
+      - if False, create the new IP pool
+
+    --------------------------------------------------------------------------
+    Passing user's arguments into the module
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the IP pool
+      - if False, create the new IP pool
+    """
     if isinstance(resources, dict):
         pass
     else:
         module.fail_json(
-            msg=f"The response returned is not in a dictionary format, contant support"
+            msg="The response returned is not in a dictionary format."
         )
 
-    # ########################################################################
-    # we need to see if our Resource has already been created, this determine
-    #   our future API calls.
-    # we create a new dictionary with a k/v of 'provisioned' set to False.
-    #   if the ippool has already been provisioned, we'll flip this bit to True
-    #   and store it's site ID
-    # ########################################################################
-    ipv4_pool = dict()
-    ipv4_pool["display_name"] = None
-    ipv4_pool["id"] = None
-    ipv4_pool["provisioned"] = False
+    pool = {}
+    pool["display_name"] = None
+    pool["id"] = None
+    pool["provisioned"] = False
+
     for each in resources["items"]:
         if each["display_name"] == module.params["display_name"]:
-            ipv4_pool["display_name"] = each["display_name"]
-            ipv4_pool["id"] = each["id"]
-            ipv4_pool["provisioned"] = True
+            pool["display_name"] = each["display_name"]
+            pool["id"] = each["id"]
+            pool["provisioned"] = True
 
-    # #######################################################################
-    # if the user set the state to 'absent', then we need to either delete
-    #   an existing site, or report back to the user that the site didn't
-    #   exist.
-    # #######################################################################
     if module.params["state"] == "absent":
-        if ipv4_pool["provisioned"] is True:
-            response = rest.delete(f"resources/ip-pools/{ipv4_pool['id']}")
+        if pool["provisioned"] is True:
+            response = rest.delete(f"resources/ip-pools/{pool['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
-            module.exit_json(changed=False, data="IP Pool does not exist, exiting")
+            module.exit_json(
+                changed=False, data="IP Pool does not exist, exiting")
 
-    # #######################################################################
-    # if you made it here, then you're looking to either create an existing,
-    #   or update an existing, ip pool
-    # this logic can get a little harry, so stick with the comments when
-    #   you're deep in the woods and need a guiding light
-    # #######################################################################
     else:
+        if pool["provisioned"] is False:
 
-        # #######################################################################
-        # create the ipv4_pool if it doesn't already exist
-        # #######################################################################
-        if ipv4_pool["provisioned"] is False:
-
-            # #######################################################################
-            # we create a few important objects here:
-            #   - subnets_payload: changing the data-model of the subnets for API
-            #   - ipv4_pool_data: parameters entered by the user to create the site
-            #   - response: create the site and store the response of our API
-            #   - site['id']: use the response to get the site's id
-            #                 parent object site was created above
-            # #######################################################################
-            subnets_payload = list()
+            # changing the data-model of the subnets for API
+            subnets_payload = []
             for each in module.params["subnets"]:
-                networks = dict()
+                networks = {}
                 networks["network"] = each
                 subnets_payload.append(networks)
 
-            ipv4_pool_data = dict(
+            # setting parameters to create the pool
+            pool_data = dict(
                 display_name=module.params["display_name"],
+                id=module.params["id"],
                 subnets=subnets_payload,
                 tags=module.params["tags"],
             )
 
-            response = rest.post(f"resources/ip-pools", data=ipv4_pool_data)
-            ipv4_pool_data["id"] = response.json["id"]
+            # create the pool and store the response of our API
+            response = rest.post("resources/ip-pools", data=pool_data)
+            pool_data["id"] = response.json["id"]
 
             module.exit_json(changed=True, data=response.json)
 
-        module.exit_json(changed=False, data=ipv4_pool)
+        module.exit_json(changed=False, data=pool)
 
 
 def ipv6_pool(resources, module, rest):
+    """Here we create, update, or delete IPv6 pools.
+
+    --------------------------------------------------------------------------
+    Determine if the IP pool already exists
+    --------------------------------------------------------------------------
+      - create a new dictionary with a k/v of 'provisioned' set to False
+      - set to True if the resource has already been provisioned
+      - store it's ID
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'absent'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we delete the IP pool
+      - if False, report back that IP pool didn't exist
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'present'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the IP pool
+      - if False, create the new IP pool
+
+    --------------------------------------------------------------------------
+    Passing user's arguments into the module
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the IP pool
+      - if False, create the new IP pool
+    """
     if isinstance(resources, dict):
         pass
     else:
         module.fail_json(
-            msg=f"The response returned is not in a dictionary format, contant support"
+            msg="The response returned is not in a dictionary format"
         )
 
-    # ########################################################################
-    # we need to see if our Resource has already been created, this determine
-    #   our future API calls.
-    # we create a new dictionary with a k/v of 'provisioned' set to False.
-    #   if the site has already been provisioned, we'll flip this bit to True
-    #   and store it's site ID
-    # ########################################################################
-    ipv6_pool = dict()
-    ipv6_pool["display_name"] = None
-    ipv6_pool["id"] = None
-    ipv6_pool["provisioned"] = False
+    pool = {}
+    pool["display_name"] = None
+    pool["id"] = None
+    pool["provisioned"] = False
+
     for each in resources["items"]:
         if each["display_name"] == module.params["display_name"]:
-            ipv6_pool["display_name"] = each["display_name"]
-            ipv6_pool["id"] = each["id"]
-            ipv6_pool["provisioned"] = True
+            pool["display_name"] = each["display_name"]
+            pool["id"] = each["id"]
+            pool["provisioned"] = True
 
-    # #######################################################################
-    # if the user set the state to 'absent', then we need to either delete
-    #   an existing site, or report back to the user that the site didn't
-    #   exist.
-    # #######################################################################
     if module.params["state"] == "absent":
-        if ipv6_pool["provisioned"] is True:
-            response = rest.delete(f"resources/ipv6-pools/{ipv6_pool['id']}")
+        if pool["provisioned"] is True:
+            response = rest.delete(f"resources/ipv6-pools/{pool['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
-            module.exit_json(changed=False, data="IPv6 Pool does not exist, exiting")
+            module.exit_json(
+                changed=False, data="IPv6 Pool does not exist, exiting")
 
-    # #######################################################################
-    # if you made it here, then you're looking to either create an existing,
-    #   or update an existing, ip pool
-    # this logic can get a little harry, so stick with the comments when
-    #   you're deep in the woods and need a guiding light
-    # #######################################################################
     else:
+        if pool["provisioned"] is False:
 
-        # #######################################################################
-        # create the ipv6_pool if it doesn't already exist
-        # #######################################################################
-        if ipv6_pool["provisioned"] is False:
-
-            # #######################################################################
-            # we create a few important objects here:
-            #   - subnets_payload: changing the data-model of the subnets for API
-            #   - ipv6_pool_data: parameters entered by the user to create the site
-            #   - response: create the site and store the response of our API
-            #   - site['id']: use the response to get the site's id
-            #                 parent object site was created above
-            # #######################################################################
+            # changing the data-model of the subnets for API
             subnets_payload = list()
             for each in module.params["subnets"]:
                 networks = dict()
                 networks["network"] = each
                 subnets_payload.append(networks)
 
-            ipv6_pool_data = dict(
+            # setting parameters to create the pool
+            pool_data = dict(
                 display_name=module.params["display_name"],
+                id=module.params["id"],
                 subnets=subnets_payload,
                 tags=module.params["tags"],
             )
 
-            response = rest.post(f"resources/ipv6-pools", data=ipv6_pool_data)
-            ipv6_pool_data["id"] = response.json["id"]
+            # create the pool and store the response of our API
+            response = rest.post("resources/ipv6-pools", data=pool_data)
+            pool_data["id"] = response.json["id"]
 
             module.exit_json(changed=True, data=response.json)
 
-        module.exit_json(changed=False, data=ipv6_pool)
+        module.exit_json(changed=False, data=pool)
 
 
 def asn_pool(resources, module, rest):
+    """Here we create, update, or delete ASN pools.
+
+    --------------------------------------------------------------------------
+    Determine if the ASN pool already exists
+    --------------------------------------------------------------------------
+      - create a new dictionary with a k/v of 'provisioned' set to False
+      - set to True if the resource has already been provisioned
+      - store it's ID
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'absent'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we delete the ASN pool
+      - if False, report back that ASN pool didn't exist
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'present'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the ASN pool
+      - if False, create the new ASN pool
+
+    --------------------------------------------------------------------------
+    Passing user's arguments into the module
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the ASN pool
+      - if False, create the new ASN pool
+    """
     if isinstance(resources, dict):
         pass
     else:
         module.fail_json(
-            msg=f"The response returned is not in a dictionary format, contant support"
+            msg="The response returned is not in a dictionary format"
         )
 
-    # ########################################################################
-    # we need to see if our Resource has already been created, this determine
-    #   our future API calls.
-    # we create a new dictionary with a k/v of 'provisioned' set to False.
-    #   if the site has already been provisioned, we'll flip this bit to True
-    #   and store it's site ID
-    # ########################################################################
-    asn_pool = dict()
-    asn_pool["display_name"] = None
-    asn_pool["id"] = None
-    asn_pool["provisioned"] = False
+    pool = {}
+    pool["display_name"] = None
+    pool["id"] = None
+    pool["provisioned"] = False
+
     for each in resources["items"]:
         if each["display_name"] == module.params["display_name"]:
-            asn_pool["display_name"] = each["display_name"]
-            asn_pool["id"] = each["id"]
-            asn_pool["provisioned"] = True
+            pool["display_name"] = each["display_name"]
+            pool["id"] = each["id"]
+            pool["provisioned"] = True
 
-    # #######################################################################
-    # if the user set the state to 'absent', then we need to either delete
-    #   an existing site, or report back to the user that the site didn't
-    #   exist.
-    # #######################################################################
     if module.params["state"] == "absent":
-        if asn_pool["provisioned"] is True:
-            response = rest.delete(f"resources/asn-pools/{asn_pool['id']}")
+        if pool["provisioned"] is True:
+            response = rest.delete(f"resources/asn-pools/{pool['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
-            module.exit_json(changed=False, data="ASN Pool does not exist, exiting")
+            module.exit_json(
+                changed=False, data="ASN Pool does not exist, exiting")
 
-    # #######################################################################
-    # if you made it here, then you're looking to either create an existing,
-    #   or update an existing, ip pool
-    # this logic can get a little harry, so stick with the comments when
-    #   you're deep in the woods and need a guiding light
-    # #######################################################################
     else:
-
-        # #######################################################################
-        # create the asn_pool if it doesn't already exist
-        # #######################################################################
-        if asn_pool["provisioned"] is False:
-
-            # #######################################################################
-            # we create a few important objects here:
-            #   - subnets_payload: changing the data-model of the subnets for API
-            #   - asn_pool_data: parameters entered by the user to create the site
-            #   - response: create the site and store the response of our API
-            #   - site['id']: use the response to get the site's id
-            #                 parent object site was created above
-            # #######################################################################
-            asn_pool_data = dict(
+        if pool["provisioned"] is False:
+            # setting parameters to create the pool
+            pool_data = dict(
                 display_name=module.params["display_name"],
+                id=module.params["id"],
                 ranges=module.params["ranges"],
                 tags=module.params["tags"],
             )
 
-            response = rest.post(f"resources/asn-pools", data=asn_pool_data)
-            asn_pool_data["id"] = response.json["id"]
+            # create the pool and store the response of our API
+            response = rest.post("resources/asn-pools", data=pool_data)
+            pool_data["id"] = response.json["id"]
 
             module.exit_json(changed=True, data=response.json)
 
-        module.exit_json(changed=False, data=asn_pool)
+        module.exit_json(changed=False, data=pool)
 
 
 def vlan_pool(resources, module, rest):
+    """Here we create, update, or delete VLAN pools.
+
+    --------------------------------------------------------------------------
+    Determine if the VLAN pool already exists
+    --------------------------------------------------------------------------
+      - create a new dictionary with a k/v of 'provisioned' set to False
+      - set to True if the resource has already been provisioned
+      - store it's ID
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'absent'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we delete the VLAN pool
+      - if False, report back that VLAN pool didn't exist
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'present'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the VLAN pool
+      - if False, create the new VLAN pool
+
+    --------------------------------------------------------------------------
+    Passing user's arguments into the module
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the VLAN pool
+      - if False, create the new VLAN pool
+    """
     if isinstance(resources, dict):
         pass
     else:
         module.fail_json(
-            msg=f"The response returned is not in a dictionary format, contant support"
+            msg="The response returned is not in a dictionary format"
         )
 
-    # ########################################################################
-    # we need to see if our Resource has already been created, this determine
-    #   our future API calls.
-    # we create a new dictionary with a k/v of 'provisioned' set to False.
-    #   if the site has already been provisioned, we'll flip this bit to True
-    #   and store it's site ID
-    # ########################################################################
-    vlan_pool = dict()
-    vlan_pool["display_name"] = None
-    vlan_pool["id"] = None
-    vlan_pool["provisioned"] = False
+    pool = {}
+    pool["display_name"] = None
+    pool["id"] = None
+    pool["provisioned"] = False
+
     for each in resources["items"]:
         if each["display_name"] == module.params["display_name"]:
-            vlan_pool["display_name"] = each["display_name"]
-            vlan_pool["id"] = each["id"]
-            vlan_pool["provisioned"] = True
+            pool["display_name"] = each["display_name"]
+            pool["id"] = each["id"]
+            pool["provisioned"] = True
 
-    # #######################################################################
-    # if the user set the state to 'absent', then we need to either delete
-    #   an existing site, or report back to the user that the site didn't
-    #   exist.
-    # #######################################################################
     if module.params["state"] == "absent":
-        if vlan_pool["provisioned"] is True:
-            response = rest.delete(f"resources/vlan-pools/{vlan_pool['id']}")
+        if pool["provisioned"] is True:
+            response = rest.delete(f"resources/vlan-pools/{pool['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
-            module.exit_json(changed=False, data="VLAN Pool does not exist, exiting")
+            module.exit_json(
+                changed=False, data="VLAN Pool does not exist, exiting")
 
-    # #######################################################################
-    # if you made it here, then you're looking to either create an existing,
-    #   or update an existing, ip pool
-    # this logic can get a little harry, so stick with the comments when
-    #   you're deep in the woods and need a guiding light
-    # #######################################################################
     else:
+        if pool["provisioned"] is False:
 
-        # #######################################################################
-        # create the vlan_pool if it doesn't already exist
-        # #######################################################################
-        if vlan_pool["provisioned"] is False:
-
-            # #######################################################################
-            # we create a few important objects here:
-            #   - subnets_payload: changing the data-model of the subnets for API
-            #   - vlan_pool_data: parameters entered by the user to create the site
-            #   - response: create the site and store the response of our API
-            #   - site['id']: use the response to get the site's id
-            #                 parent object site was created above
-            # #######################################################################
-            vlan_pool_data = dict(
+            # setting parameters to create the pool
+            pool_data = dict(
                 display_name=module.params["display_name"],
+                id=module.params["id"],
                 ranges=module.params["ranges"],
                 tags=module.params["tags"],
             )
 
-            response = rest.post(f"resources/vlan-pools", data=vlan_pool_data)
-            vlan_pool_data["id"] = response.json["id"]
+            # create the pool and store the response of our API
+            response = rest.post("resources/vlan-pools", data=pool_data)
+            pool_data["id"] = response.json["id"]
 
             module.exit_json(changed=True, data=response.json)
 
-        module.exit_json(changed=False, data=vlan_pool)
+        module.exit_json(changed=False, data=pool)
 
 
 def vni_pool(resources, module, rest):
+    """Here we create, update, or delete VNI pools.
+
+    --------------------------------------------------------------------------
+    Determine if the VNI pool already exists
+    --------------------------------------------------------------------------
+      - create a new dictionary with a k/v of 'provisioned' set to False
+      - set to True if the resource has already been provisioned
+      - store it's ID
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'absent'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we delete the VNI pool
+      - if False, report back that VNI pool didn't exist
+
+    --------------------------------------------------------------------------
+    If the user set the state to 'present'
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the VNI pool
+      - if False, create the new VNI pool
+
+    --------------------------------------------------------------------------
+    Passing user's arguments into the module
+    --------------------------------------------------------------------------
+      - check the value of 'provisioned'
+      - if True, we will find the ID and update the VNI pool
+      - if False, create the new VNI pool
+    """
     if isinstance(resources, dict):
         pass
     else:
         module.fail_json(
-            msg=f"The response returned is not in a dictionary format, contant support"
+            msg="The response returned is not in a dictionary format"
         )
 
-    # ########################################################################
-    # we need to see if our Resource has already been created, this determine
-    #   our future API calls.
-    # we create a new dictionary with a k/v of 'provisioned' set to False.
-    #   if the site has already been provisioned, we'll flip this bit to True
-    #   and store it's site ID
-    # ########################################################################
-    vni_pool = dict()
-    vni_pool["display_name"] = None
-    vni_pool["id"] = None
-    vni_pool["provisioned"] = False
+    pool = {}
+    pool["display_name"] = None
+    pool["id"] = None
+    pool["provisioned"] = False
+
     for each in resources["items"]:
         if each["display_name"] == module.params["display_name"]:
-            vni_pool["display_name"] = each["display_name"]
-            vni_pool["id"] = each["id"]
-            vni_pool["provisioned"] = True
+            pool["display_name"] = each["display_name"]
+            pool["id"] = each["id"]
+            pool["provisioned"] = True
 
-    # #######################################################################
-    # if the user set the state to 'absent', then we need to either delete
-    #   an existing site, or report back to the user that the site didn't
-    #   exist.
-    # #######################################################################
     if module.params["state"] == "absent":
-        if vni_pool["provisioned"] is True:
-            response = rest.delete(f"resources/vni-pools/{vni_pool['id']}")
+        if pool["provisioned"] is True:
+            response = rest.delete(f"resources/vni-pools/{pool['id']}")
             module.exit_json(changed=True, data=response.json)
         else:
-            module.exit_json(changed=False, data="VNI Pool does not exist, exiting")
+            module.exit_json(
+                changed=False, data="VNI Pool does not exist, exiting")
 
-    # #######################################################################
-    # if you made it here, then you're looking to either create an existing,
-    #   or update an existing, ip pool
-    # this logic can get a little harry, so stick with the comments when
-    #   you're deep in the woods and need a guiding light
-    # #######################################################################
     else:
+        if pool["provisioned"] is False:
 
-        # #######################################################################
-        # create the vni_pool if it doesn't already exist
-        # #######################################################################
-        if vni_pool["provisioned"] is False:
-
-            # #######################################################################
-            # we create a few important objects here:
-            #   - subnets_payload: changing the data-model of the subnets for API
-            #   - vni_pool_data: parameters entered by the user to create the site
-            #   - response: create the site and store the response of our API
-            #   - site['id']: use the response to get the site's id
-            #                 parent object site was created above
-            # #######################################################################
-            vni_pool_data = dict(
+            # setting parameters to create the pool
+            pool_data = dict(
                 display_name=module.params["display_name"],
+                id=module.params["id"],
                 ranges=module.params["ranges"],
                 tags=module.params["tags"],
             )
 
-            response = rest.post(f"resources/vni-pools", data=vni_pool_data)
-            vni_pool_data["id"] = response.json["id"]
+            # create the pool and store the response of our API
+            response = rest.post("resources/vni-pools", data=pool_data)
+            pool_data["id"] = response.json["id"]
 
             module.exit_json(changed=True, data=response.json)
 
-        module.exit_json(changed=False, data=vni_pool)
+        module.exit_json(changed=False, data=pool)
 
 
 def core(module):
-    # #######################################################################
-    # this is where we take in AnsibleModule class created earlier in the
-    # main function, when we inserted our argument spec into it.
-    # we'll use new object for all API calls
-    # #######################################################################
+    """The core function of our module.
+
+    --------------------------------------------------------------------------
+    Gather a list of rack types already created
+    --------------------------------------------------------------------------
+      - create `rest` object for API call
+      - perform a get request
+      - store the response in a new object called 'response'
+      - ensure the status code received was a 200
+      - deserialze the json into the 'resources' object
+        - fail if this step does not return a dictionary
+
+    --------------------------------------------------------------------------
+    Create, Update, or Delete Resource
+    --------------------------------------------------------------------------
+      - execute the function that matches the user's `type`
+      - exit execution gracefully
+
+    """
     rest = ApstraHelper(module)
 
-    # #######################################################################
-    # gather a list of sites already created
-    # make sure the status code received was a 200
-    # store the list of sites in a new object called 'sites', make sure that
-    #   the object is in the format of a list, since we'll be looping soon
-    # #######################################################################
     response = rest.get(f"resources/{module.params['type']}")
     if response.status_code != 200:
         module.fail_json(
-            msg=f"Failed to receive a response from the API, here is the response information to help you debug : {response.info}"
-        )
+            msg=f"Failed to receive a response from the API:\n{response.info}")
 
     resources = response.json
 
@@ -811,22 +852,33 @@ def core(module):
 
 
 def main():
-    # #######################################################################
-    # this is the main function, did the name give it away?
-    # we're taking in the Module's argument spec from the ApstraHelper and
-    #   saving it as a new object named 'argument_spec'.
-    # another object is created, this time to the specification defined by
-    #   the offical AnsibleModule class, and we pass in the argument_spec.
-    #   this act creates our new 'module' object, which is then passed
-    #   through our other, much larger, function named 'core'
-    # #######################################################################
+    """Our module's main execution.
+
+    --------------------------------------------------------------------------
+    Creating our argument specification
+    --------------------------------------------------------------------------
+      - take in the data model from ApstraHelper's `rack_spec` method
+      - save it as a new object named 'argument_spec'
+
+    --------------------------------------------------------------------------
+    Creating our AnsibleModule object
+    --------------------------------------------------------------------------
+      - pass our `argument_spec` object into AnsibleModule class object
+      - store the resulting module object as `module`
+
+    --------------------------------------------------------------------------
+    Calling our module object
+    --------------------------------------------------------------------------
+      - pass our `module` object into our `core` function
+      - gracefully fail if an exception appears
+    """
     argument_spec = ApstraHelper.resources_spec()
     module = AnsibleModule(argument_spec=argument_spec)
 
     try:
         core(module)
-    except Exception as e:
-        module.fail_json(msg=to_native(e), exception=format_exc())
+    except Exception:  # pylint: disable=broad-except
+        module.fail_json(msg=to_native(Exception), exception=format_exc())
 
 
 if __name__ == "__main__":
