@@ -20,7 +20,7 @@ module: template
 
 short_description: Build Design Templates.
 
-version_added: "0.0.10"
+version_added: "0.0.11"
 
 description: This module will leverage the platform REST API to automate the management of design templates within Apstra.
 
