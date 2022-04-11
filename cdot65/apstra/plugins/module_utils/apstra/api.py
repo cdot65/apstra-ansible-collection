@@ -1227,8 +1227,8 @@ class ApstraHelper:
                                     ),
                                 ),
                             ),
-                            tags=dict(required=True, type="list",
-                                      elements="str"),
+                            # tags=dict(required=True, type="list",
+                            #           elements="str"),
                             target_switch_label=dict(
                                 required=False,
                                 type="str",
@@ -1243,7 +1243,7 @@ class ApstraHelper:
                         required=True,
                         type="str",
                     ),
-                    tags=dict(required=True, type="list", elements="str"),
+                    # tags=dict(required=True, type="list", elements="str"),
                 ),
             ),
             api_token=dict(
@@ -1314,7 +1314,7 @@ class ApstraHelper:
                                 ),
                             ),
                             switch_peer=dict(required=False, type="str"),
-                            tags=dict(required=True, type="list",
+                            tags=dict(required=False, type="list",
                                       elements="str"),
                             target_switch_label=dict(
                                 required=False,
@@ -1391,7 +1391,7 @@ class ApstraHelper:
                         required=False,
                         type="str",
                     ),
-                    tags=dict(required=True, type="list", elements="str"),
+                    # tags=dict(required=True, type="list", elements="str"),
                 ),
             ),
             logical_devices=dict(
